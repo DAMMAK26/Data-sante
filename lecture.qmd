@@ -41,12 +41,12 @@ table(data$sm2a, useNA = "ifany")
 
 ```
 
-
 ```{r}
 unique_values <- lapply(data['sm2b'], unique)
 print(unique_values)
 
 ```
+
 ```{r}
 
 # Encoder sans affecter NA
@@ -88,11 +88,10 @@ print(unique_values)
 
 ```
 
-
 ```{r}
 # Encoder sm3 en valeurs numériques
 data$sm3 <- as.numeric(factor(data$sm3, 
-                              levels = c("Non", "Oui", "Je ne comprends pas"), 
+                              levels = c("Je ne comprends pas", "Non", "Oui"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -101,26 +100,24 @@ table(data$sm3, useNA = "ifany")
 
 ```
 
-
-
-
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$sm4), ";")))
 print(unique_values)
 ```
+
 ```{r}
 library(tidyverse)
 data <- data %>% mutate(
-  sm4_Mes_amis = ifelse(grepl("Mes amis", sm4), 1, 0),
-  sm4_Ma_famille = ifelse(grepl("Ma famille", sm4), 1, 0),
   sm4_Personne = ifelse(grepl("Personne", sm4), 1, 0),
-  sm4_Internet_reseaux_sociaux = ifelse(grepl("Internet, réseaux sociaux", sm4), 1, 0),
-  sm4_Autre = ifelse(grepl("Autre", sm4), 1, 0),
-  sm4_Docteur_ou_infirmiere = ifelse(grepl("Docteur ou infirmière", sm4), 1, 0),
-  sm4_Services_specialises = ifelse(grepl("Services spécialisés", sm4), 1, 0),
+  sm4_Ma_famille = ifelse(grepl("Ma famille", sm4), 1, 0),
+  sm4_Mes_amis = ifelse(grepl("Mes amis", sm4), 1, 0),
   sm4_Professeurs_educatifs = ifelse(grepl("Professeurs ou personnels éducatifs", sm4), 1, 0),
-  sm4_Groupes_religieux = ifelse(grepl("Groupes religieux", sm4), 1, 0)
+  sm4_Docteur_ou_infirmiere = ifelse(grepl("Docteur ou infirmière", sm4), 1, 0),
+  sm4_Groupes_religieux = ifelse(grepl("Groupes religieux", sm4), 1, 0),
+  sm4_Internet_reseaux_sociaux = ifelse(grepl("Internet, réseaux sociaux", sm4), 1, 0),
+  sm4_Services_specialises = ifelse(grepl("Services spécialisés", sm4), 1, 0),
+  sm4_Autre = ifelse(grepl("Autre", sm4), 1, 0)
 )
 
 data$sm4 <- NULL
@@ -128,8 +125,6 @@ data$sm4 <- NULL
 
 
 ```
-
-
 
 ```{r}
 unique_values <- lapply(data['sm5'], unique)
@@ -148,8 +143,6 @@ data$sm5 <- as.numeric(factor(data$sm5,
 table(data$sm5, useNA = "ifany")
 
 ```
-
-
 
 ```{r}
 unique_values <- lapply(data['sm6'], unique)
@@ -198,15 +191,23 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cv1 into numeric values with the correct order
 data$cv1 <- as.numeric(factor(data$cv1, 
-                              levels = c("Plus de 2h par jour", "Entre 1h et 1h30 par jour","30 minutes par jour ou moins","Aucun","Entre 30 minutes et 1h par jour", "Entre 1h30 et 2h par jour"), exclude = NULL))
+                              levels = c("Aucun", 
+                                         "30 minutes par jour ou moins", 
+                                         "Entre 30 minutes et 1h par jour", 
+                                         "Entre 1h et 1h30 par jour", 
+                                         "Entre 1h30 et 2h par jour", 
+                                         "Plus de 2h par jour"), 
+                              exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv1, useNA = "ifany")
 
 
+
 ```
+
 ```{r}
 unique_values <- lapply(data['cv2a'], unique)
 print(unique_values)
@@ -215,12 +216,16 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cv2a into numeric values with the correct order
 data$cv2a <- as.numeric(factor(data$cv2a, 
-                              levels = c("Jamais"   ,      "6 fois ou plus", "1 fois"    ,     "2 ou 3 fois" ,   "4 ou 5 fois"), 
+                              levels = c("Jamais", 
+                                         "1 fois", 
+                                         "2 ou 3 fois", 
+                                         "4 ou 5 fois", 
+                                         "6 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv2a, useNA = "ifany")
 
 
@@ -234,13 +239,18 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cv2b into numeric values with the correct order
 data$cv2b <- as.numeric(factor(data$cv2b, 
-                              levels = c("Jamais"  ,       "2 ou 3 fois"   , "6 fois ou plus" ,"1 fois"  , "4 ou 5 fois"  ), 
+                              levels = c("Jamais", 
+                                         "1 fois", 
+                                         "2 ou 3 fois", 
+                                         "4 ou 5 fois", 
+                                         "6 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv2b, useNA = "ifany")
+
 
 
 ```
@@ -253,17 +263,19 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cv3 into numeric values with the correct order
 data$cv3 <- as.numeric(factor(data$cv3, 
-                              levels = c("Non", "Oui meme sans permis", "Oui seulement apres avoir eu mon permis"),
+                              levels = c("Non", 
+                                         "Oui seulement apres avoir eu mon permis", 
+                                         "Oui meme sans permis"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv3, useNA = "ifany")
 
 
-```
 
+```
 
 ```{r}
 unique_values <- lapply(data['cv4a'], unique)
@@ -272,19 +284,21 @@ print(unique_values)
 ```
 
 ```{r}
-
-# Encoder sm5 en valeurs numériques
+# Encode cv4a into numeric values with the correct order
 data$cv4a <- as.numeric(factor(data$cv4a, 
-                              levels = c("6 fois ou plus", "Jamais"       ,  "1 fois"        
-, "2 ou 3 fois"   , "4 ou 5 fois"), 
+                              levels = c("Jamais", 
+                                         "1 fois", 
+                                         "2 ou 3 fois", 
+                                         "4 ou 5 fois", 
+                                         "6 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv4a, useNA = "ifany")
 
 
-```
 
+```
 
 ```{r}
 unique_values <- lapply(data['cv4b'], unique)
@@ -294,18 +308,20 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cv4b into numeric values with the correct order
 data$cv4b <- as.numeric(factor(data$cv4b, 
-                              levels = c("6 fois ou plus", "Jamais"       ,  "1 fois"        
-, "2 ou 3 fois"   , "4 ou 5 fois"), 
+                              levels = c("Jamais", 
+                                         "1 fois", 
+                                         "2 ou 3 fois", 
+                                         "4 ou 5 fois", 
+                                         "6 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv4b, useNA = "ifany")
 
 
 ```
-
 
 ```{r}
 unique_values <- lapply(data['cv5'], unique)
@@ -314,26 +330,27 @@ print(unique_values)
 ```
 
 ```{r}
-
-# Encoder sm5 en valeurs numériques
+# Encode cv5 into numeric values with the correct order
 data$cv5 <- as.numeric(factor(data$cv5, 
-                              levels = c("Parfois"  ,                                     
- "Jamais"                                        ,
- "Rarement"                                      ,
-"Toujours"                                      ,
- "La plupart du temps"                           ,
- "Je ne suis pas monte dans un vehicule a moteur"), 
-                            exclude = NULL))
+                              levels = c("Je ne suis pas monte dans un vehicule a moteur",
+                                         "Jamais", 
+                                         "Rarement", 
+                                         "Parfois", 
+                                         "La plupart du temps", 
+                                         "Toujours"), 
+                              exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cv5, useNA = "ifany")
 
 
 ```
+
 ```{r}
 unique_values <- lapply(data['vi1'], unique)
 print(unique_values)
 ```
+
 ```{r}
 
 # Encoder sm5 en valeurs numériques
@@ -347,36 +364,32 @@ table(data$vi1, useNA = "ifany")
 
 ```
 
-
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$vi2), ";")))
 print(unique_values)
 ```
+
 ```{r}
 data <- data %>% mutate(
   vi2_Personne_mon_age = ifelse(grepl("Une personne de mon âge que je connais", vi2), 1, 0),
-  vi2_Membre_famille = ifelse(grepl("Un membre de ma famille", vi2), 1, 0),
-  vi2_Autre = ifelse(grepl("Autre", vi2), 1, 0),
-  vi2_Quelquun_inconnu = ifelse(grepl("Quelqu'un que je ne connais pas", vi2), 1, 0),
   vi2_Petit_ami_petite_amie = ifelse(grepl("Mon petit ami ou ma petite amie", vi2), 1, 0),
-  vi2_Adulte_non_famille = ifelse(grepl("Un adulte que je connais mais qui n'est pas de ma famille", vi2), 1, 0)
+  vi2_Membre_famille = ifelse(grepl("Un membre de ma famille", vi2), 1, 0),
+  vi2_Adulte_non_famille = ifelse(grepl("Un adulte que je connais mais qui n'est pas de ma famille", vi2), 1, 0),
+  vi2_Quelquun_inconnu = ifelse(grepl("Quelqu'un que je ne connais pas", vi2), 1, 0),
+  vi2_Autre = ifelse(grepl("Autre", vi2), 1, 0)
 )
+
 data$vi2 <- NULL
 
+
 ```
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['vi2_autre'], unique)
 print(unique_values)
 
 ```
-
 
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
@@ -385,28 +398,27 @@ print(unique_values)
 
 
 ```
+
 ```{r}
 data <- data %>% mutate(
   vi3_Ecole = ifelse(grepl("A l'école \\(collège, lycée\\)", vi3), 1, 0),
   vi3_Maison = ifelse(grepl("A la maison", vi3), 1, 0),
-  vi3_Transports_publics = ifelse(grepl("Dans les transports publics", vi3), 1, 0),
-  vi3_Autre = ifelse(grepl("Autre", vi3), 1, 0),
   vi3_Quartier = ifelse(grepl("Dans le quartier", vi3), 1, 0),
   vi3_Soiree_mariage = ifelse(grepl("A une soirée, un mariage", vi3), 1, 0),
-  vi3_Lieu_public = ifelse(grepl("Dans un lieu public", vi3), 1, 0)
+  vi3_Transports_publics = ifelse(grepl("Dans les transports publics", vi3), 1, 0),
+  vi3_Lieu_public = ifelse(grepl("Dans un lieu public", vi3), 1, 0),
+  vi3_Autre = ifelse(grepl("Autre", vi3), 1, 0)
 )
+
 data$vi3 <- NULL
+
 ```
-
-
 
 ```{r}
 unique_values <- lapply(data['vi3_autre'], unique)
 print(unique_values)
 
 ```
-
-
 
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
@@ -419,20 +431,22 @@ print(unique_values)
 data <- data %>% mutate(
   vi4_Habitude = ifelse(grepl("La personne en a l'habitude", vi4), 1, 0),
   vi4_Personne_violente = ifelse(grepl("C'est une personne violente", vi4), 1, 0),
-  vi4_Resultats_scolaires = ifelse(grepl("Du fait de mes résultats scolaires", vi4), 1, 0),
   vi4_Colere = ifelse(grepl("La personne était en colère", vi4), 1, 0),
-  vi4_Communauté_ethnie = ifelse(grepl("Du fait de ma communauté d'appartenance", vi4), 1, 0),
-  vi4_Autre = ifelse(grepl("Autre", vi4), 1, 0),
-  vi4_Orientation_sexuelle = ifelse(grepl("Du fait de mon orientation sexuelle", vi4), 1, 0),
-  vi4_Corps_image = ifelse(grepl("Du fait de mon corps ou de mon image", vi4), 1, 0),
-  vi4_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", vi4), 1, 0),
-  vi4_Comportement = ifelse(grepl("Du fait de mon comportement", vi4), 1, 0),
   vi4_Alcool_drogues = ifelse(grepl("La personne avait bu de l'alcool ou consommé des drogues", vi4), 1, 0),
   vi4_Sans_raison = ifelse(grepl("Pour aucune raison particulière", vi4), 1, 0),
   vi4_Filmer_internet = ifelse(grepl("Pour le filmer et le mettre sur internet", vi4), 1, 0),
-  vi4_Religion = ifelse(grepl("Du fait de ma religion", vi4), 1, 0)
+  vi4_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", vi4), 1, 0),
+  vi4_Resultats_scolaires = ifelse(grepl("Du fait de mes résultats scolaires", vi4), 1, 0),
+  vi4_Comportement = ifelse(grepl("Du fait de mon comportement", vi4), 1, 0),
+  vi4_Corps_image = ifelse(grepl("Du fait de mon corps ou de mon image", vi4), 1, 0),
+  vi4_Orientation_sexuelle = ifelse(grepl("Du fait de mon orientation sexuelle", vi4), 1, 0),
+  vi4_Religion = ifelse(grepl("Du fait de ma religion", vi4), 1, 0),
+  vi4_Communauté_ethnie = ifelse(grepl("Du fait de ma communauté d'appartenance", vi4), 1, 0),
+  vi4_Autre = ifelse(grepl("Autre", vi4), 1, 0)
 )
+
 data$vi4 <- NULL
+
 
 
 ```
@@ -442,7 +456,6 @@ unique_values <- lapply(data['vi4_autre'], unique)
 print(unique_values)
 
 ```
-
 
 ```{r}
 unique_values <- lapply(data['vi5'], unique)
@@ -461,6 +474,7 @@ data$vi5 <- as.numeric(factor(data$vi5,
 table(data$vi5, useNA = "ifany")
 
 ```
+
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$vi6), ";")))
@@ -468,31 +482,28 @@ print(unique_values)
 
 
 ```
+
 ```{r}
 data <- data %>% mutate(
   vi6_Personne_mon_age = ifelse(grepl("Une personne de mon âge que je connais", vi6), 1, 0),
+  vi6_Petit_ami_petite_amie = ifelse(grepl("Mon petit ami ou ma petite amie", vi6), 1, 0),
   vi6_Membre_famille = ifelse(grepl("Un membre de ma famille", vi6), 1, 0),
   vi6_Adulte_non_famille = ifelse(grepl("Un adulte que je connais mais qui n'est pas de ma famille", vi6), 1, 0),
   vi6_Quelquun_inconnu = ifelse(grepl("Quelqu'un que je ne connais pas", vi6), 1, 0),
-  vi6_Petit_ami_petite_amie = ifelse(grepl("Mon petit ami ou ma petite amie", vi6), 1, 0),
   vi6_Autre = ifelse(grepl("Autre", vi6), 1, 0)
 )
+
 data$vi6 <- NULL
 
 
+
 ```
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['vi6_autre'], unique)
 print(unique_values)
 
 ```
-
 
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
@@ -501,33 +512,29 @@ print(unique_values)
 
 
 ```
+
 ```{r}
 data <- data %>% mutate(
   vi7_Ecole = ifelse(grepl("A l'école \\(collège, lycée\\)", vi7), 1, 0),
+  vi7_Maison = ifelse(grepl("A la maison", vi7), 1, 0),
   vi7_Quartier = ifelse(grepl("Dans le quartier", vi7), 1, 0),
   vi7_Soiree_mariage = ifelse(grepl("A une soirée, un mariage", vi7), 1, 0),
-  vi7_Internet_reseaux_sociaux = ifelse(grepl("Sur Internet ou les réseaux sociaux", vi7), 1, 0),
-  vi7_Maison = ifelse(grepl("A la maison", vi7), 1, 0),
+  vi7_Transports_publics = ifelse(grepl("Dans les transports publics", vi7), 1, 0),
   vi7_Lieu_public = ifelse(grepl("Dans un lieu public", vi7), 1, 0),
-  vi7_Autre = ifelse(grepl("Autre", vi7), 1, 0),
-  vi7_Transports_publics = ifelse(grepl("Dans les transports publics", vi7), 1, 0)
+  vi7_Internet_reseaux_sociaux = ifelse(grepl("Sur Internet ou les réseaux sociaux", vi7), 1, 0),
+  vi7_Autre = ifelse(grepl("Autre", vi7), 1, 0)
 )
+
 data$vi7 <- NULL
 
+
 ```
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['vi7_autre'], unique)
 print(unique_values)
 
 ```
-
-
 
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
@@ -539,34 +546,29 @@ print(unique_values)
 data <- data %>% mutate(
   vi8_Habitude = ifelse(grepl("La personne en a l'habitude", vi8), 1, 0),
   vi8_Personne_mechante = ifelse(grepl("C'est une personne méchante", vi8), 1, 0),
-  vi8_Resultats_scolaires = ifelse(grepl("Du fait de mes résultats scolaires", vi8), 1, 0),
   vi8_Colere = ifelse(grepl("La personne était en colère", vi8), 1, 0),
-  vi8_Corps_image = ifelse(grepl("Du fait de mon corps ou de mon image", vi8), 1, 0),
-  vi8_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", vi8), 1, 0),
-  vi8_Comportement = ifelse(grepl("Du fait de mon comportement", vi8), 1, 0),
   vi8_Alcool_drogues = ifelse(grepl("La personne avait bu de l'alcool ou consommé des drogues", vi8), 1, 0),
-  vi8_Communauté_ethnie = ifelse(grepl("Du fait de ma communauté d'appartenance", vi8), 1, 0),
   vi8_Sans_raison = ifelse(grepl("Pour aucune raison particulière", vi8), 1, 0),
-  vi8_Autre = ifelse(grepl("Autre", vi8), 1, 0),
+  vi8_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", vi8), 1, 0),
+  vi8_Resultats_scolaires = ifelse(grepl("Du fait de mes résultats scolaires", vi8), 1, 0),
+  vi8_Comportement = ifelse(grepl("Du fait de mon comportement", vi8), 1, 0),
+  vi8_Corps_image = ifelse(grepl("Du fait de mon corps ou de mon image", vi8), 1, 0),
   vi8_Orientation_sexuelle = ifelse(grepl("Du fait de mon orientation sexuelle", vi8), 1, 0),
-  vi8_Religion = ifelse(grepl("Du fait de ma religion", vi8), 1, 0)
+  vi8_Religion = ifelse(grepl("Du fait de ma religion", vi8), 1, 0),
+  vi8_Communauté_ethnie = ifelse(grepl("Du fait de ma communauté d'appartenance", vi8), 1, 0),
+  vi8_Autre = ifelse(grepl("Autre", vi8), 1, 0)
 )
+
 data$vi8 <- NULL
 
 
 ```
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['vi8_autre'], unique)
 print(unique_values)
 
 ```
-
-
 
 ```{r}
 unique_values <- lapply(data['tb1'], unique)
@@ -595,19 +597,25 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode tb2 into numeric values with the correct order
 data$tb2 <- as.numeric(factor(data$tb2, 
-                              levels = c("7 ans ou moins"
- , "10 ans"      ,   "8 ans"      ,   
- "11 ans"     ,    "14 ans"      ,  
- "12 ans"    ,     "15 ans"     ,   
- "16 ans"   ,      "18 ans ou plus",
- "13 ans"  ,       "9 ans"         ,
- "17 ans"  ), 
+                              levels = c("7 ans ou moins",
+                                         "8 ans",
+                                         "9 ans",
+                                         "10 ans",
+                                         "11 ans",
+                                         "12 ans",
+                                         "13 ans",
+                                         "14 ans",
+                                         "15 ans",
+                                         "16 ans",
+                                         "17 ans",
+                                         "18 ans ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$tb2, useNA = "ifany")
+
 
 ```
 
@@ -621,7 +629,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$tb3 <- as.numeric(factor(data$tb3, 
-                              levels = c("Oui", "Non"), 
+                              levels = c( "Non","Oui"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -637,13 +645,19 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode tb4 into numeric values with the correct order
 data$tb4 <- as.numeric(factor(data$tb4, 
-                              levels = c("Tous les jours", "1 a 2 jours", "10 a 19 jours", "3 a 5 jours", "20 a 29 jours", "6 a 9 jours"), 
+                              levels = c("1 a 2 jours",
+                                         "3 a 5 jours",
+                                         "6 a 9 jours",
+                                         "10 a 19 jours",
+                                         "20 a 29 jours",
+                                         "Tous les jours"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$tb4, useNA = "ifany")
+
 
 ```
 
@@ -654,15 +668,19 @@ print(unique_values)
 ```
 
 ```{r}
-
-# Encoder sm5 en valeurs numériques
+# Encode tb5 into numeric values with the correct order
 data$tb5 <- as.numeric(factor(data$tb5, 
-                              levels = c("1 cigarette par jour", "Moins d'une cigarette par jour", "11 a 20 cigarettes par jour", "2 a 5 cigarettes par jour", "Plus de 20 cigarettes par jour", "6 a 10 cigarettes par jour"
-), 
+                              levels = c("Moins d'une cigarette par jour",
+                                         "1 cigarette par jour",
+                                         "2 a 5 cigarettes par jour",
+                                         "6 a 10 cigarettes par jour",
+                                         "11 a 20 cigarettes par jour",
+                                         "Plus de 20 cigarettes par jour"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$tb5, useNA = "ifany")
+
 
 ```
 
@@ -674,19 +692,19 @@ print(unique_values)
 
 ```{r}
 data <- data %>% mutate(
-  tb6_Autre_facon = ifelse(grepl("Je les ai eues d'une autre façon", tb6), 1, 0),
-  tb6_Volees_sans_permission = ifelse(grepl("Je les ai volées ou je les ai eues sans permission", tb6), 1, 0),
+  tb6_Achete_moi_meme = ifelse(grepl("Je les ai achetées moi-même dans un magasin", tb6), 1, 0),
+  tb6_Achete_par_autre = ifelse(grepl("J'ai donné de l'argent à quelqu'un pour qu'il m'en achète", tb6), 1, 0),
   tb6_Famille_donnees = ifelse(grepl("Un membre de ma famille me les a données", tb6), 1, 0),
   tb6_Autre_personne_donnees = ifelse(grepl("Une autre personne me les a données", tb6), 1, 0),
-  tb6_Achete_par_autre = ifelse(grepl("J'ai donné de l'argent à quelqu'un pour qu'il m'en achète", tb6), 1, 0),
-  tb6_Achete_moi_meme = ifelse(grepl("Je les ai achetées moi-même dans un magasin", tb6), 1, 0)
+  tb6_Volees_sans_permission = ifelse(grepl("Je les ai volées ou je les ai eues sans permission", tb6), 1, 0),
+  tb6_Autre_facon = ifelse(grepl("Je les ai eues d'une autre façon", tb6), 1, 0)
 )
+
 data$tb6 <- NULL
+
 ```
 
-
-
-`
+\`
 
 ```{r}
 unique_values <- lapply(data['tb7'], unique)
@@ -714,13 +732,20 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode tb8 into numeric values with the correct order
 data$tb8 <- as.numeric(factor(data$tb8, 
-                              levels = c("0 jour", "Tous les jours", "1 ou 2 jours", "6 a 9 jours", "3 a 5 jours", "10 a 19 jours", "20 a 29 jours"), 
+                              levels = c("0 jour",
+                                         "1 ou 2 jours",
+                                         "3 a 5 jours",
+                                         "6 a 9 jours",
+                                         "10 a 19 jours",
+                                         "20 a 29 jours",
+                                         "Tous les jours"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$tb8, useNA = "ifany")
+
 
 ```
 
@@ -732,14 +757,16 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao1 into numeric values with the correct order
 data$ao1 <- as.numeric(factor(data$ao1, 
-                              levels = c("Non", "Oui, plus que quelques gorgees", "Oui, juste une ou deux gorgees pour gouter/tester ou sans faire expres"
-), 
+                              levels = c("Non",
+                                         "Oui, juste une ou deux gorgees pour gouter/tester ou sans faire expres",
+                                         "Oui, plus que quelques gorgees"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao1, useNA = "ifany")
+
 
 ```
 
@@ -751,14 +778,25 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao2a into numeric values with the correct order
 data$ao2a <- as.numeric(factor(data$ao2a, 
-                              levels = c("10 ans", "11 ans", "13 ans", "12 ans", "9 ans", "15 ans", "7 ans ou moins", "17 ans", "16 ans", "14 ans", "8 ans", "18 ans ou plus"
-), 
+                              levels = c("7 ans ou moins",
+                                         "8 ans",
+                                         "9 ans",
+                                         "10 ans",
+                                         "11 ans",
+                                         "12 ans",
+                                         "13 ans",
+                                         "14 ans",
+                                         "15 ans",
+                                         "16 ans",
+                                         "17 ans",
+                                         "18 ans ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao2a, useNA = "ifany")
+
 
 ```
 
@@ -770,13 +808,23 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao2b into numeric values with the correct order
 data$ao2b <- as.numeric(factor(data$ao2b, 
-                              levels = c("7 ans ou moins", "12 ans", "11 ans", "10 ans", "14 ans", "15 ans", "16 ans", "17 ans", "18 ans ou plus", "13 ans", "8 ans", "9 ans"
-), 
+                              levels = c("7 ans ou moins",
+                                         "8 ans",
+                                         "9 ans",
+                                         "10 ans",
+                                         "11 ans",
+                                         "12 ans",
+                                         "13 ans",
+                                         "14 ans",
+                                         "15 ans",
+                                         "16 ans",
+                                         "17 ans",
+                                         "18 ans ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao2b, useNA = "ifany")
 
 ```
@@ -789,14 +837,18 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao3a into numeric values with the correct order
 data$ao3a <- as.numeric(factor(data$ao3a, 
-                              levels = c("Jamais", "Rarement", "Chaque mois", "Chaque jour", "Chaque semaine"
-), 
+                              levels = c("Jamais",
+                                         "Rarement",
+                                         "Chaque mois",
+                                         "Chaque semaine",
+                                         "Chaque jour"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao3a, useNA = "ifany")
+
 
 ```
 
@@ -808,14 +860,18 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao3b into numeric values with the correct order
 data$ao3b <- as.numeric(factor(data$ao3b, 
-                              levels = c("Jamais", "Rarement", "Chaque mois", "Chaque semaine", "Chaque jour"
-), 
+                              levels = c("Jamais",
+                                         "Rarement",
+                                         "Chaque mois",
+                                         "Chaque semaine",
+                                         "Chaque jour"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao3b, useNA = "ifany")
+
 
 ```
 
@@ -827,14 +883,18 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao3c into numeric values with the correct order
 data$ao3c <- as.numeric(factor(data$ao3c, 
-                              levels = c("Chaque jour", "Jamais", "Chaque mois", "Chaque semaine", "Rarement"
-), 
+                              levels = c("Jamais",
+                                         "Rarement",
+                                         "Chaque mois",
+                                         "Chaque semaine",
+                                         "Chaque jour"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao3c, useNA = "ifany")
+
 
 ```
 
@@ -846,17 +906,20 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao3d into numeric values with the correct order
 data$ao3d <- as.numeric(factor(data$ao3d, 
-                              levels = c("Jamais", "Chaque mois", "Rarement", "Chaque semaine", "Chaque jour"
-), 
+                              levels = c("Jamais",
+                                         "Rarement",
+                                         "Chaque mois",
+                                         "Chaque semaine",
+                                         "Chaque jour"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao3d, useNA = "ifany")
 
-```
 
+```
 
 ```{r}
 unique_values <- lapply(data['ao4'], unique)
@@ -868,7 +931,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$ao4 <- as.numeric(factor(data$ao4, 
-                              levels = c( "Oui" , "Non"), 
+                              levels = c( "Non","Oui" ), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -884,13 +947,19 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao5 into numeric values with the correct order
 data$ao5 <- as.numeric(factor(data$ao5, 
-                              levels = c("1 a 2 jours", "6 a 9 jours", "3 a 5 jours", "20 a 29 jours", "10 a 19 jours", "Tous les jours"), 
+                              levels = c("1 a 2 jours",
+                                         "3 a 5 jours",
+                                         "6 a 9 jours",
+                                         "10 a 19 jours",
+                                         "20 a 29 jours",
+                                         "Tous les jours"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao5, useNA = "ifany")
+
 
 ```
 
@@ -902,14 +971,19 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao6 into numeric values with the correct order
 data$ao6 <- as.numeric(factor(data$ao6, 
-                              levels = c("Moins d'un verre", "1 verre", "4 verres", "3 verres", "5 verres ou plus", "2 verres"
-), 
+                              levels = c("Moins d'un verre",
+                                         "1 verre",
+                                         "2 verres",
+                                         "3 verres",
+                                         "4 verres",
+                                         "5 verres ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao6, useNA = "ifany")
+
 
 ```
 
@@ -921,16 +995,21 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao7 into numeric values with the correct order
 data$ao7 <- as.numeric(factor(data$ao7, 
-                              levels = c("0 fois", "1 ou 2 fois", "20 fois ou plus", "3 a 9 fois", "10 a 19 fois"
-), 
+                              levels = c("0 fois",
+                                         "1 ou 2 fois",
+                                         "3 a 9 fois",
+                                         "10 a 19 fois",
+                                         "20 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao7, useNA = "ifany")
 
+
 ```
+
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$ao8), ";")))
@@ -939,20 +1018,18 @@ print(unique_values)
 
 ```{r}
 data <- data %>% mutate(
-  ao8_Autre_facon = ifelse(grepl("Je l'ai eu d'une autre façon", ao8), 1, 0),
-  ao8_Par_amis = ifelse(grepl("Je l'ai eu par mes amis", ao8), 1, 0),
   ao8_Achete_moi_meme = ifelse(grepl("Je l'ai acheté moi-même dans un magasin ou une boutique", ao8), 1, 0),
-  ao8_Par_famille = ifelse(grepl("Je l'ai eu par ma famille", ao8), 1, 0),
   ao8_Achete_par_autre = ifelse(grepl("J'ai donné de l'argent à quelqu'un pour qu'il m'en achète", ao8), 1, 0),
+  ao8_Par_famille = ifelse(grepl("Je l'ai eu par ma famille", ao8), 1, 0),
+  ao8_Par_amis = ifelse(grepl("Je l'ai eu par mes amis", ao8), 1, 0),
   ao8_Marche_noir = ifelse(grepl("Marche noir", ao8), 1, 0),
-  ao8_Vole_sans_permission = ifelse(grepl("Je l'ai volé ou je l'ai eu sans permission", ao8), 1, 0)
+  ao8_Vole_sans_permission = ifelse(grepl("Je l'ai volé ou je l'ai eu sans permission", ao8), 1, 0),
+  ao8_Autre_facon = ifelse(grepl("Je l'ai eu d'une autre façon", ao8), 1, 0)
 )
+
 data$ao8 <- NULL
+
 ```
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['ao9'], unique)
@@ -981,13 +1058,24 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ao10 into numeric values with the correct order
 data$ao10 <- as.numeric(factor(data$ao10, 
-                              levels = c("11 ans", "15 ans", "16 ans", "17 ans", "10 ans", "13 ans", "7 ans ou moins", "14 ans", "12 ans", "8 ans", "18 ans ou plus"), 
+                              levels = c("7 ans ou moins",
+                                         "8 ans",
+                                         "10 ans",
+                                         "11 ans",
+                                         "12 ans",
+                                         "13 ans",
+                                         "14 ans",
+                                         "15 ans",
+                                         "16 ans",
+                                         "17 ans",
+                                         "18 ans ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao10, useNA = "ifany")
+
 
 ```
 
@@ -998,15 +1086,17 @@ print(unique_values)
 ```
 
 ```{r}
-
-# Encoder sm5 en valeurs numériques
+# Encode ao11 into numeric values with the correct order
 data$ao11 <- as.numeric(factor(data$ao11, 
-                              levels = c("1 ou 2 fois", "3 a 9 fois", "0 fois", "10 fois ou plus"
-), 
+                              levels = c("0 fois",
+                                         "1 ou 2 fois",
+                                         "3 a 9 fois",
+                                         "10 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ao11, useNA = "ifany")
+
 
 ```
 
@@ -1036,13 +1126,23 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cn2 into numeric values with the correct order
 data$cn2 <- as.numeric(factor(data$cn2, 
-                              levels = c("7 ans ou moins", "10 ans", "17 ans", "14 ans", "13 ans", "16 ans", "15 ans", "11 ans", "12 ans", "18 ans ou plus", "9 ans", "8 ans"
-), 
+                              levels = c("7 ans ou moins",
+                                         "8 ans",
+                                         "9 ans",
+                                         "10 ans",
+                                         "11 ans",
+                                         "12 ans",
+                                         "13 ans",
+                                         "14 ans",
+                                         "15 ans",
+                                         "16 ans",
+                                         "17 ans",
+                                         "18 ans ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cn2, useNA = "ifany")
 
 ```
@@ -1057,7 +1157,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$cn3 <- as.numeric(factor(data$cn3, 
-                              levels = c("Oui" ,"Non"), 
+                              levels = c("Non","Oui"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1073,13 +1173,19 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode cn4 into numeric values with the correct order
 data$cn4 <- as.numeric(factor(data$cn4, 
-                              levels = c("1 a 2 jours", "10 a 19 jours", "Tous les jours", "3 a 5 jours", "6 a 9 jours", "20 a 29 jours"), 
+                              levels = c("1 a 2 jours",
+                                         "3 a 5 jours",
+                                         "6 a 9 jours",
+                                         "10 a 19 jours",
+                                         "20 a 29 jours",
+                                         "Tous les jours"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cn4, useNA = "ifany")
+
 
 ```
 
@@ -1088,19 +1194,19 @@ table(data$cn4, useNA = "ifany")
 unique_values <- unique(unlist(strsplit(as.character(data$cn5), ";")))
 print(unique_values)
 ```
+
 ```{r}
 data <- data %>% mutate(
   cn5_Avant_ecole = ifelse(grepl("Avant l'ecole", cn5), 1, 0),
-  cn5_Weekend = ifelse(grepl("Le weekend", cn5), 1, 0),
-  cn5_Soiree = ifelse(grepl("En soiree", cn5), 1, 0),
   cn5_Pendant_ecole = ifelse(grepl("Pendant l'ecole", cn5), 1, 0),
-  cn5_Apres_ecole = ifelse(grepl("Apres l'ecole", cn5), 1, 0)
+  cn5_Apres_ecole = ifelse(grepl("Apres l'ecole", cn5), 1, 0),
+  cn5_Weekend = ifelse(grepl("Le weekend", cn5), 1, 0),
+  cn5_Soiree = ifelse(grepl("En soiree", cn5), 1, 0)
 )
+
 data$cn5 <- NULL
+
 ```
-
-
-
 
 ```{r}
 unique_values <- lapply(data['cn6'], unique)
@@ -1109,16 +1215,21 @@ print(unique_values)
 ```
 
 ```{r}
-
-# Encoder sm5 en valeurs numériques
+# Encode cn6 into numeric values with the correct order
 data$cn6 <- as.numeric(factor(data$cn6, 
-                              levels = c("0 fois"     ,     "1 ou 2 fois" ,    "3 a 9 fois"   ,   "10 a 19 fois" ,   "20 fois ou plus"), 
+                              levels = c("0 fois",
+                                         "1 ou 2 fois",
+                                         "3 a 9 fois",
+                                         "10 a 19 fois",
+                                         "20 fois ou plus"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$cn6, useNA = "ifany")
 
+
 ```
+
 ```{r}
 unique_values <- lapply(data['cn7'], unique)
 print(unique_values)
@@ -1129,7 +1240,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$cn7 <- as.numeric(factor(data$cn7, 
-                              levels = c("Oui",  "Non"), 
+                              levels = c( "Non","Oui"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1147,7 +1258,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$ad1 <- as.numeric(factor(data$ad1, 
-                              levels = c("Non"        ,                      "Je ne sais pas ce qu'est le kava" ,"Oui" ), 
+                              levels = c("Je ne sais pas ce qu'est le kava","Non"     ,"Oui" ), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1182,33 +1293,43 @@ print(unique_values)
 ```{r}
 data <- data %>% mutate(
   ad3_Tabac = ifelse(grepl("Tabac", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Cannabis and its variations
   ad3_Cannabis = ifelse(grepl("Cannabis|Canabis|Kanabis|Canabise", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Cocaine
   ad3_Cocaine = ifelse(grepl("Cocaïne", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Hallucinogens
   ad3_LSD = ifelse(grepl("LSD", ad3, ignore.case = TRUE), 1, 0),
   ad3_MDMA_Ecstasy = ifelse(grepl("MDMA|Ecstasy|Extasie", ad3, ignore.case = TRUE), 1, 0),
+  ad3_Champignons = ifelse(grepl("Champi|Champignons", ad3, ignore.case = TRUE), 1, 0),
+  ad3_DMT = ifelse(grepl("diméthyletriptamine|DMT", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Prescription drugs and opioids
   ad3_Cachetons = ifelse(grepl("Cacheton|Cachetons|Cachet|CACHETON", ad3, ignore.case = TRUE), 1, 0),
   ad3_Cashton = ifelse(grepl("Kashton|Cashton", ad3, ignore.case = TRUE), 1, 0),
   ad3_Codeine = ifelse(grepl("Codéine|Codeïne", ad3, ignore.case = TRUE), 1, 0),
   ad3_Lean = ifelse(grepl("Lean", ad3, ignore.case = TRUE), 1, 0),
-  ad3_Champignons = ifelse(grepl("Champi|Champignons", ad3, ignore.case = TRUE), 1, 0),
-  ad3_Opium = ifelse(grepl("Opium", ad3, ignore.case = TRUE), 1, 0),
-  ad3_Alcool = ifelse(grepl("Alcool|Vin|Bière|Pastis", ad3, ignore.case = TRUE), 1, 0),
   ad3_Morphine = ifelse(grepl("Morphine", ad3, ignore.case = TRUE), 1, 0),
+  ad3_Opium = ifelse(grepl("Opium", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Other recreational drugs
   ad3_Shitskank = ifelse(grepl("Shit|Skank", ad3, ignore.case = TRUE), 1, 0),
   ad3_Flacka = ifelse(grepl("Flacka", ad3, ignore.case = TRUE), 1, 0),
-  ad3_DMT = ifelse(grepl("diméthyletriptamine|DMT", ad3, ignore.case = TRUE), 1, 0),
   ad3_Poudre = ifelse(grepl("Poudre", ad3, ignore.case = TRUE), 1, 0),
+  
+  # Alcohol
+  ad3_Alcool = ifelse(grepl("Alcool|Vin|Bière|Pastis", ad3, ignore.case = TRUE), 1, 0),
+  
+  # None or Other
   ad3_Rien = ifelse(grepl("Rien", ad3, ignore.case = TRUE), 1, 0),
   ad3_Autre = ifelse(grepl("Autre", ad3, ignore.case = TRUE), 1, 0)
 )
+
 data$ad3 <- NULL
+
 ```
-
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['ss1'], unique)
@@ -1218,19 +1339,20 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ss1 into numeric values with the correct order
 data$ss1 <- as.numeric(factor(data$ss1, 
-                              levels = c("Par aucune personne"                                           
-, "Je ne comprends pas la question"                               
-, "Des personnes du sexe oppose"                                  
-, "Je prefere ne pas repondre"                                    
-, "Par des personnes du sexe oppose ET des personnes du meme sexe"
-, "Je ne suis pas sure"                                           
-, "Des personnes du meme sexe"    ), 
+                              levels = c("Par aucune personne",
+                                         "Des personnes du même sexe",
+                                         "Des personnes du sexe opposé",
+                                         "Par des personnes du sexe opposé ET des personnes du même sexe",
+                                         "Je ne suis pas sure",
+                                         "Je ne comprends pas la question",
+                                         "Je prefere ne pas repondre"), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ss1, useNA = "ifany")
+
 
 ```
 
@@ -1242,14 +1364,14 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encode ss2 into numeric values with the correct order
 data$ss2 <- as.numeric(factor(data$ss2, 
-                              levels = c("Non", "Je prefere ne pas repondre", "Je ne comprends pas la question", "Oui"
-), 
+                              levels = c("Je ne comprends pas la question","Je prefere ne pas repondre","Non","Oui" ), 
                               exclude = NULL))
 
-# Vérifier le résultat après encodage
+# Verify the result after encoding
 table(data$ss2, useNA = "ifany")
+
 
 ```
 
@@ -1263,7 +1385,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$ss3 <- as.numeric(factor(data$ss3, 
-                              levels = c(), 
+                              levels = c("1" ,"2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1281,7 +1403,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$ss4 <- as.numeric(factor(data$ss4, 
-                              levels = c("Non", "Oui", "Je ne sais pas"
+                              levels = c("Je ne sais pas", "Non", "Oui"
 ), 
                               exclude = NULL))
 
@@ -1308,6 +1430,7 @@ data$ss5 <- as.numeric(factor(data$ss5,
 table(data$ss5, useNA = "ifany")
 
 ```
+
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$ss6), ";")))
@@ -1316,22 +1439,18 @@ print(unique_values)
 
 ```{r}
 data <- data %>% mutate(
+  ss6_College_Lycee = ifelse(grepl("Au Collège / Lycée", ss6), 1, 0),
   ss6_Pharmacie = ifelse(grepl("En pharmacie", ss6), 1, 0),
   ss6_Dispensaire_CMS_ESPAS_CMP_CCF = ifelse(grepl("En dispensaire / CMS / ESPAS CMP / CCF", ss6), 1, 0),
-  ss6_College_Lycee = ifelse(grepl("Au Collège / Lycée", ss6), 1, 0),
-  ss6_Partenaire = ifelse(grepl("C'est mon partenaire qui se l'est procuré", ss6), 1, 0),
-  ss6_Autre = ifelse(grepl("Autre", ss6), 1, 0),
   ss6_Supermarche = ifelse(grepl("En supermarché", ss6), 1, 0),
+  ss6_Bar_Boite = ifelse(grepl("En bar ou boîte de nuit", ss6), 1, 0),
+  ss6_Partenaire = ifelse(grepl("C'est mon partenaire qui se l'est procuré", ss6), 1, 0),
   ss6_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", ss6), 1, 0),
-  ss6_Bar_Boite = ifelse(grepl("En bar ou boîte de nuit", ss6), 1, 0)
+  ss6_Autre = ifelse(grepl("Autre", ss6), 1, 0)
 )
 data$ss6 <- NULL
+
 ```
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['ss6_autre'], unique)
@@ -1350,36 +1469,32 @@ data$ss6_autre <- as.numeric(factor(data$ss6_autre,
 table(data$ss6_autre, useNA = "ifany")
 
 ```
+
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$ss7), ";")))
 print(unique_values)
 ```
+
 ```{r}
 data <- data %>% mutate(
   ss7_Partenaire_ne_voulait_pas = ifelse(grepl("Mon / Ma partenaire ne voulait pas", ss7), 1, 0),
   ss7_Pas_sur_moi = ifelse(grepl("Je n'en avais pas sur moi, ni mon partenaire", ss7), 1, 0),
+  ss7_Je_ne_sais_pas_trouver = ifelse(grepl("Je ne sais pas où en trouver", ss7), 1, 0),
+  ss7_Trop_cher = ifelse(grepl("C'est trop cher", ss7), 1, 0),
   ss7_Alcool_fume = ifelse(grepl("J'avais trop bu / fumé", ss7), 1, 0),
   ss7_Je_ne_sais_pas_utilite = ifelse(grepl("Je ne sais pas à quoi ça sert", ss7), 1, 0),
-  ss7_Autre = ifelse(grepl("Autre", ss7), 1, 0),
-  ss7_Je_ne_sais_pas_trouver = ifelse(grepl("Je ne sais pas où en trouver", ss7), 1, 0),
-  ss7_Trop_cher = ifelse(grepl("C'est trop cher", ss7), 1, 0)
+  ss7_Autre = ifelse(grepl("Autre", ss7), 1, 0)
 )
 data$ss7 <- NULL
+
 ```
-
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['ss7_autre'], unique)
 print(unique_values)
 
 ```
-
-
 
 ```{r}
 unique_values <- lapply(data['ss8'], unique)
@@ -1398,28 +1513,27 @@ data$ss8 <- as.numeric(factor(data$ss8,
 table(data$ss8, useNA = "ifany")
 
 ```
+
 ```{r}
 # Voir toutes les valeurs uniques possibles dans sm4
 unique_values <- unique(unlist(strsplit(as.character(data$ss9), ";")))
 print(unique_values)
 ```
+
 ```{r}
 data <- data %>% mutate(
-  ss9_Autres_methodes = ifelse(grepl("Autres méthodes", ss9), 1, 0),
-  ss9_Implant = ifelse(grepl("Implant", ss9), 1, 0),
-  ss9_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", ss9), 1, 0),
   ss9_Pilule_contraceptive = ifelse(grepl("Pilule contraceptive", ss9), 1, 0),
+  ss9_Implant = ifelse(grepl("Implant", ss9), 1, 0),
   ss9_Contraception_urgence = ifelse(grepl("Contraception d'urgence", ss9), 1, 0),
   ss9_Retrait = ifelse(grepl("Retrait \\(interrompre le rapport avant éjaculation\\)", ss9), 1, 0),
-  ss9_Abstinence_periodique = ifelse(grepl("Abstinence périodique \\(calendrier\\)", ss9), 1, 0)
+  ss9_Abstinence_periodique = ifelse(grepl("Abstinence périodique \\(calendrier\\)", ss9), 1, 0),
+  ss9_Autres_methodes = ifelse(grepl("Autres méthodes", ss9), 1, 0),
+  ss9_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", ss9), 1, 0)
 )
 data$ss9 <- NULL
 
+
 ```
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['ss10'], unique)
@@ -1431,7 +1545,7 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$ss10 <- as.numeric(factor(data$ss10, 
-                              levels = c("Non"      ,                  "Je prefere ne pas repondre" ,"Oui"    ), 
+                              levels = c("Je prefere ne pas repondre" ,"Non"      ,                  "Oui"    ), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1447,14 +1561,17 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encoder ss11 en valeurs numériques selon l'ordre du questionnaire
 data$ss11 <- as.numeric(factor(data$ss11, 
-                              levels = c("Non", "Je ne suis pas sur", "Je ne sais pas ce qu'est le porno", "Oui"
-), 
+                              levels = c( "Je ne suis pas sur", 
+                                         "Je ne sais pas ce qu'est le porno","Non", 
+                                         "Oui" 
+                                        ), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
 table(data$ss11, useNA = "ifany")
+
 
 ```
 
@@ -1463,24 +1580,22 @@ table(data$ss11, useNA = "ifany")
 unique_values <- unique(unlist(strsplit(as.character(data$ss12), ";")))
 print(unique_values)
 ```
+
 ```{r}
 data <- data %>% mutate(
   ss12_Choquant = ifelse(grepl("J'ai trouve ca choquant", ss12), 1, 0),
+  ss12_Pas_aime = ifelse(grepl("Je n'ai pas aime", ss12), 1, 0),
   ss12_Je_ne_sais_pas = ifelse(grepl("Je ne sais pas", ss12), 1, 0),
-  ss12_Accepte_d_en_faire = ifelse(grepl("J'ai accepte d'en faire", ss12), 1, 0),
   ss12_Appris_utiles = ifelse(grepl("J'ai appris des choses utiles a ma sexualite", ss12), 1, 0),
   ss12_Fun_cool = ifelse(grepl("J'ai trouve ca fun, cool", ss12), 1, 0),
-  ss12_Pas_aime = ifelse(grepl("Je n'ai pas aime", ss12), 1, 0),
   ss12_Reconnu_personnes = ifelse(grepl("J'ai reconnu des personnes que je connais", ss12), 1, 0),
+  ss12_Reconnu_moi_meme = ifelse(grepl("Je me suis reconnu alors que je ne le voulais pas", ss12), 1, 0),
   ss12_Partage = ifelse(grepl("J'ai partage", ss12), 1, 0),
-  ss12_Reconnu_moi_meme = ifelse(grepl("Je me suis reconnu alors que je ne le voulais pas", ss12), 1, 0)
+  ss12_Accepte_d_en_faire = ifelse(grepl("J'ai accepte d'en faire", ss12), 1, 0)
 )
 data$ss12 <- NULL
+
 ```
-
-
-
-
 
 ```{r}
 unique_values <- lapply(data['pr1a'], unique)
@@ -1492,7 +1607,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1a <- as.numeric(factor(data$pr1a, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Plutot mal informe", "Je n'en ai jamais entendu parler"
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"
 ), 
                               exclude = NULL))
 
@@ -1511,7 +1629,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1b <- as.numeric(factor(data$pr1b, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Plutot mal informe", "Je n'en ai jamais entendu parler"), 
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1529,7 +1650,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1c <- as.numeric(factor(data$pr1c, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Je n'en ai jamais entendu parler", "Plutot mal informe"
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"
 ), 
                               exclude = NULL))
 
@@ -1548,7 +1672,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1d <- as.numeric(factor(data$pr1d, 
-                              levels = c("Je ne sais pas", "Plutot bien informe", "Je n'en ai jamais entendu parler", "Plutot mal informe"
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"
 ), 
                               exclude = NULL))
 
@@ -1567,7 +1694,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1e <- as.numeric(factor(data$pr1e, 
-                              levels = c("Je n'en ai jamais entendu parler", "Je ne sais pas", "Plutot bien informe", "Plutot mal informe"
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"
 ), 
                               exclude = NULL))
 
@@ -1586,7 +1716,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1f <- as.numeric(factor(data$pr1f, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Je n'en ai jamais entendu parler", "Plutot mal informe"
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"
 ), 
                               exclude = NULL))
 
@@ -1605,7 +1738,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1g <- as.numeric(factor(data$pr1g, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Je n'en ai jamais entendu parler", "Plutot mal informe"), 
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1623,7 +1759,10 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr1h <- as.numeric(factor(data$pr1h, 
-                              levels = c("Plutot bien informe", "Je ne sais pas", "Je n'en ai jamais entendu parler", "Plutot mal informe"), 
+                              levels = c("Plutot bien informe", 
+                                         "Plutot mal informe", 
+                                         "Je ne sais pas", 
+                                         "Je n'en ai jamais entendu parler"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1639,10 +1778,14 @@ print(unique_values)
 
 ```{r}
 
-# Encoder sm5 en valeurs numériques
+# Encoder pr2a en valeurs numériques selon l'ordre du questionnaire
 data$pr2a <- as.numeric(factor(data$pr2a, 
-                              levels = c("Je ne connais pas le risque", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque plutot eleve", "Risque tres eleve", "Risque nul"
-), 
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"), 
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1660,7 +1803,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2b <- as.numeric(factor(data$pr2b, 
-                              levels = c("Risque plutot eleve", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque tres eleve", "Risque nul", "Je ne connais pas le risque"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1679,7 +1827,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2c <- as.numeric(factor(data$pr2c, 
-                              levels = c("Risque nul", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque plutot eleve", "Risque tres eleve", "Je ne connais pas le risque"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1698,7 +1851,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2d <- as.numeric(factor(data$pr2d, 
-                              levels = c("Je ne connais pas le risque", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque tres eleve", "Risque nul", "Risque plutot eleve"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1717,7 +1875,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2e <- as.numeric(factor(data$pr2e, 
-                              levels = c("Je ne connais pas le risque", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque tres eleve", "Risque nul", "Risque plutot eleve"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1736,7 +1899,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2f <- as.numeric(factor(data$pr2f, 
-                              levels = c("Je ne connais pas le risque", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque tres eleve", "Risque nul", "Risque plutot eleve"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1755,7 +1923,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2g <- as.numeric(factor(data$pr2g, 
-                              levels = c("Risque tres eleve", "Je ne sais pas ce que c'est", "Risque plutot faible", "Je ne connais pas le risque", "Risque nul", "Risque plutot eleve"
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"
 ), 
                               exclude = NULL))
 
@@ -1774,7 +1947,12 @@ print(unique_values)
 
 # Encoder sm5 en valeurs numériques
 data$pr2h <- as.numeric(factor(data$pr2h, 
-                              levels = c("Je ne connais pas le risque", "Je ne sais pas ce que c'est", "Risque plutot faible", "Risque tres eleve", "Risque plutot eleve", "Risque nul"),
+                              levels = c("Je ne sais pas ce que c'est", 
+                                         "Je ne connais pas le risque", 
+                                         "Risque nul", 
+                                         "Risque plutôt faible", 
+                                         "Risque plutôt élevé", 
+                                         "Risque très élevé"),
                               exclude = NULL))
 
 # Vérifier le résultat après encodage
@@ -1788,12 +1966,11 @@ print(unique_values)
 
 ```
 
-
-
-
 ```{r}
+
+# Spécifier l'ordre des colonnes souhaité
 nouvel_ordre <- c("sm2a", "sm2b", "sm2c", "sm3", "sm4_Mes_amis","sm4_Ma_famille","sm4_Personne","sm4_Internet_reseaux_sociaux","sm4_Autre","sm4_Docteur_ou_infirmiere","sm4_Services_specialises","sm4_Professeurs_educatifs","sm4_Groupes_religieux","sm5","sm6","sm7","cv1","cv2a","cv2b","cv3","cv4a","cv4b","cv5","vi1","vi2_Personne_mon_age","vi2_Membre_famille","vi2_Autre","vi2_Quelquun_inconnu","vi2_Petit_ami_petite_amie","vi2_Adulte_non_famille","vi3_Ecole","vi3_Maison","vi3_Transports_publics", "vi3_Autre","vi3_Quartier","vi3_Soiree_mariage", "vi3_Lieu_public","vi4_Habitude","vi4_Personne_violente","vi4_Resultats_scolaires","vi4_Colere","vi4_Communauté_ethnie","vi4_Autre","vi4_Orientation_sexuelle","vi4_Corps_image","vi4_Je_ne_sais_pas","vi4_Comportement","vi4_Alcool_drogues","vi4_Sans_raison","vi4_Filmer_internet","vi4_Religion","vi5","vi6_Personne_mon_age","vi6_Membre_famille","vi6_Quelquun_inconnu","vi6_Petit_ami_petite_amie","vi6_Autre","vi7_Ecole","vi7_Quartier","vi7_Soiree_mariage","vi7_Internet_reseaux_sociaux","vi7_Maison","vi7_Lieu_public","vi7_Autre","vi7_Transports_publics","vi8_Habitude","vi8_Personne_mechante","vi8_Resultats_scolaires","vi8_Colere","vi8_Corps_image","vi8_Je_ne_sais_pas","vi8_Comportement","vi8_Alcool_drogues","vi8_Communauté_ethnie","vi8_Sans_raison","vi8_Autre","vi8_Orientation_sexuelle","vi8_Religion","tb1","tb2","tb3","tb4","tb5","tb6_Autre_facon","tb6_Volees_sans_permission","tb6_Famille_donnees","tb6_Autre_personne_donnees","tb6_Achete_par_autre","tb6_Achete_moi_meme","tb7","tb8","ao1","ao2a","ao2b","ao3a","ao3b","ao3c","ao3d","ao4","ao5","ao6","ao7","ao8_Autre_facon","ao8_Par_amis","ao8_Achete_moi_meme","ao8_Par_famille","ao8_Achete_par_autre","ao8_Marche_noir","ao8_Vole_sans_permission","ao9","ao10","ao11","cn1","cn2","cn3","cn4","cn5_Avant_ecole","cn5_Weekend","cn5_Soiree","cn5_Pendant_ecole","cn5_Apres_ecole","cn6","cn7","ad1","ad2","ad3_Tabac","ad3_Cannabis","ad3_Cocaine","ad3_LSD","ad3_MDMA_Ecstasy","ad3_Cachetons","ad3_Cashton","ad3_Codeine","ad3_Lean","ad3_Champignons","ad3_Alcool","ad3_Morphine","ad3_Shitskank","ad3_Flacka","ad3_DMT","ad3_Poudre","ad3_Rien","ad3_Autre","ss1","ss2","ss3","ss4","ss5","ss6_Pharmacie","ss6_Dispensaire_CMS_ESPAS_CMP_CCF", "ss6_College_Lycee", "ss6_Partenaire", "ss6_Autre", "ss6_Supermarche", "ss6_Je_ne_sais_pas", "ss6_Bar_Boite", "ss7_Partenaire_ne_voulait_pas","ss7_Pas_sur_moi", "ss7_Alcool_fume", "ss7_Je_ne_sais_pas_utilite", "ss7_Autre", "ss7_Je_ne_sais_pas_trouver", "ss7_Trop_cher","ss8","ss9_Autres_methodes", "ss9_Implant", "ss9_Je_ne_sais_pas", "ss9_Pilule_contraceptive", "ss9_Contraception_urgence", "ss9_Retrait", "ss9_Abstinence_periodique","ss10","ss11","ss12_Choquant", "ss12_Je_ne_sais_pas", "ss12_Accepte_d_en_faire", "ss12_Appris_utiles", "ss12_Fun_cool", "ss12_Pas_aime", "ss12_Reconnu_personnes", "ss12_Partage", "ss12_Reconnu_moi_meme", "pr1a","pr1b","pr1c","pr1d","pr1e","pr1f","pr1g","pr1h","pr2a","pr2b","pr2c","pr2d","pr2e","pr2f","pr2g","pr2h","pond")
-# Spécifier l'ordre des colonnes souhaité 
+ 
 
 # Réorganiser les colonnes du dataframe 
 data_ordered <- data[, nouvel_ordre]
@@ -1802,7 +1979,83 @@ data_ordered <- data[, nouvel_ordre]
 
 ```
 
+```{r}
+write.csv(data_ordered, "down.csv", row.names = FALSE)
+
+```
+
+# Prefixes in Sub-Questions from the Questionnaire
+
+In the dataset, sub-questions are grouped using specific prefixes. Below is a list of these prefixes and their associated topics:
+
+## List of Prefixes
+
+| Prefix   | Description                              |
+|----------|------------------------------------------|
+| **`sm`** | Social media, smoking, stress management |
+| **`cv`** | Car, vehicle, transportation             |
+| **`vi`** | Violence, incidents                      |
+| **`tb`** | Tobacco, smoking habits                  |
+| **`ao`** | Alcohol, drinking behavior               |
+| **`cn`** | Cannabis, drug use                       |
+| **`ad`** | Other drug use                           |
+| **`ss`** | Sexual health, relationships             |
+| **`pr`** | Prevention, risk perception              |
+
+------------------------------------------------------------------------
+
+### 💡 Notes:
+
+-   These prefixes are **derived from variable names** in the dataset.
+-   They **group related sub-questions** for easier analysis.
+
+🚀 *Use these prefixes to filter or analyze specific question groups efficiently!*
+
+```{r}
+# Function to select columns with names starting with a given prefix
+get_columns_by_prefix <- function(data, prefix) {
+  # Get column names that start with the prefix
+  selected_cols <- grep(paste0("^", prefix), names(data), value = TRUE)
+  
+  # Subset the data with the selected columns
+  return(data[, selected_cols, drop = FALSE])
+}
+
+# Example usage
+subset_data <- get_columns_by_prefix(data_ordered, "ss")
+print(names(subset_data))  # Prints the selected column names
+
+```
+
+```{r}
+
+# ✅ Apply the function to `data_ordered` for each prefix
+subset_sm <- get_columns_by_prefix(data_ordered, "sm")
+subset_cv <- get_columns_by_prefix(data_ordered, "cv")
+subset_vi <- get_columns_by_prefix(data_ordered, "vi")
+subset_tb <- get_columns_by_prefix(data_ordered, "tb")
+subset_ao <- get_columns_by_prefix(data_ordered, "ao")
+subset_cn <- get_columns_by_prefix(data_ordered, "cn")
+subset_ad <- get_columns_by_prefix(data_ordered, "ad")
+subset_ss <- get_columns_by_prefix(data_ordered, "ss")
+subset_pr <- get_columns_by_prefix(data_ordered, "pr")
+
+# ✅ Print column names for each subset to verify
+print(names(subset_sm))  # Columns starting with "sm"
+print(names(subset_cv))  # Columns starting with "cv"
+print(names(subset_vi))  # Columns starting with "vi"
+print(names(subset_tb))  # Columns starting with "tb"
+print(names(subset_ao))  # Columns starting with "ao"
+print(names(subset_cn))  # Columns starting with "cn"
+print(names(subset_ad))  # Columns starting with "ad"
+print(names(subset_ss))  # Columns starting with "ss"
+print(names(subset_pr))  # Columns starting with "pr")
+
+
+```
+
+```{r}
+
+```
 
 ---
-
-
