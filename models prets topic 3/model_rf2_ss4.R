@@ -4,37 +4,40 @@ library(data.table)
 library(readxl)
 
 # Charger les données
-data <- read_excel('dataset_complet2.xlsx')
+data <- read_excel("dataset_complet2_ss4.xlsx")
 df <- as.data.table(data)
 df <- df[complete.cases(df), ]
 
-
-
 # Liste des variables d'intérêt
 columns_of_interest <- c(
-  'sm2a', 'sm2b', 'sm2c', 'sm1', 'sm3', 'sm6', 
-  'vf2_1', 'vf2_2', 'vf2_3', 'vf2_4', 'vf2_5', 'vf2_6', 'vf2_7', 'vf4a', 'vf4b', 
-  'secu_scol', 'absence_scol', 'violence_scol', 
-  'al4_1', 'al4_3', 'heure_sport_extra', 'sport_amusement', 'sport_sante', 
-  'tb1', 'tb2', 'ao1', 'cn1', 'sd1'
+  'ss4','ss2',  # Comportements préventifs
+  'sante','tb1',   # Anxiété de santé
+  'pr1a'	,'pr1b'	,'pr1c',	'pr1d','pr1e','pr1f','pr1g',	'pr1h', 'pr2a', 	'pr2b'	,'pr2c'	,'pr2d'	, 'pr2e'	,'pr2f'	,'pr2g',	'pr2h',  # Perception des risques environnementaux
+  'alimentation_saine','ptit_dej_semaine','ptit_dej_weekend','al4_1', 'al4_3', 'jour_sport','sport_extra', 'sd1',  # Comportements de santé
+  'ao1', 'ao2a', 'cn1',  # Consommation de substances
+  'niveau_scol', 'type_ecole', 'vf2_1',	'vf2_2'	,'vf2_3',	'vf2_4',	'vf2_5',	'vf2_6'	,'vf2_7',
+  'sexe', 'age'  # Caractéristiques sociodémographiques
 )
+
 
 # Filtrer le dataframe pour ne garder que les colonnes d'intérêt
 df_filtered <- df[, ..columns_of_interest]
-#df_filtered <- df_filtered[1:500,]
+
 # Split dataset (Train/Test)
 df_split <- initial_split(df_filtered, prop = 0.8)
 train <- training(df_split)
 test <- testing(df_split)
+# Liste des variables cibles # Performance scolaire
+target_columns <- c('ss4')  
 
-# Liste des variables cibles
-
-target_columns <- c('sm2a', 'sm2b', 'sm2c', 'sm1', 'sm3', 'sm6' )
 # Liste des variables explicatives
-predictor_columns <- c('vf2_1', 'vf2_2', 'vf2_3', 'vf2_4', 'vf2_5', 'vf2_6', 'vf2_7', 'vf4a', 
-                       'vf4b', 'secu_scol', 'absence_scol', 'violence_scol', 'al4_1', 'al4_3', 
-                       'heure_sport_extra', 'sport_amusement', 'sport_sante', 'tb1', 'tb2', 
-                       'ao1', 'cn1', 'sd1')
+predictor_columns <- c(  'ss2',  'sante','tb1'   ,  'pr1a'	,'pr1b'	,'pr1c',	'pr1d','pr1e','pr1f','pr1g',	'pr1h', 'pr2a', 	'pr2b'	,'pr2c'	,'pr2d'	, 'pr2e'	,'pr2f'	,'pr2g',	'pr2h',  # Perception des risques environnementaux
+                         'alimentation_saine','ptit_dej_semaine','ptit_dej_weekend','al4_1', 'al4_3', 'jour_sport','sport_extra', 'sd1',  # Comportements de santé
+                         'ao1', 'ao2a', 'cn1',  # Consommation de substances
+                         'niveau_scol', 'type_ecole', 'vf2_1',	'vf2_2'	,'vf2_3',	'vf2_4',	'vf2_5',	'vf2_6'	,'vf2_7',
+                         'sexe', 'age'  # Caractéristiques sociodémographiques
+)
+
 
 
 # Fonction d'entraînement du modèle
@@ -58,16 +61,26 @@ train_rf_model <- function(target_column) {
   
   
   
-  xgb <- boost_tree(mtry = tune(), trees = 500, learn_rate = tune()) %>% set_engine("xgboost") %>%    set_mode("classification")
-  xgb_wf <- workflow() %>% add_model(xgb) %>% add_formula(formula)
-  cv_folds <- vfold_cv(train, v = 5, strata = target_column)
-  xgb_results <- tune_grid(xgb_wf, resamples = cv_folds, grid = 10, control = control_grid())
-  best_xgb <- select_best(xgb_results, metric = "accuracy")
-  final_xgb <- finalize_workflow(xgb_wf, best_xgb)
-  trained_xgb <- fit(final_xgb, data = train)
   
-  return(trained_xgb)
+  
+  rf <- rand_forest(mtry = tune(), trees = 100) %>% set_engine("ranger") %>% set_mode("classification")
+  rf_wf <- workflow() %>% add_model(rf) %>% add_formula(formula)
+  cv_folds <- vfold_cv(train, v = 5, strata = target_column)
+  rf_results <- tune_grid(rf_wf, resamples = cv_folds, grid = 3, control = control_grid())
+  best_rf <- select_best(rf_results, metric = "accuracy")
+  final_rf <- finalize_workflow(rf_wf, best_rf)
+  trained_rf <- fit(final_rf, data = train)
+  
+  
+  
+  return(trained_rf)
 }
+
+
+
+
+
+
 
 
 
