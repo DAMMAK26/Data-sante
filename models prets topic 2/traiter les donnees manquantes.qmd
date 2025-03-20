@@ -1,0 +1,76 @@
+---
+title: "traiter les données manquantes"
+format: html
+editor: visual
+---
+
+## Lire le doc 
+```{r}
+# Charger les bibliothèques nécessaires
+library(tidymodels)
+library(data.table)
+library(readxl)
+
+# Charger les données
+data <- read_excel("dataset_complet1.xlsx")
+df <- as.data.table(data)
+
+df <- df[1:1000, ]
+
+# Liste des variables d'intérêt
+columns_of_interest <- c(
+  'sm2a', 'sm2b', 'sm2c', 'sm1', 'sm3', 'sm6', 
+  'vf2_1', 'vf2_2', 'vf2_3', 'vf2_4', 'vf2_5', 'vf2_6', 'vf2_7', 'vf4a', 'vf4b', 
+  'secu_scol', 'absence_scol', 'violence_scol', 
+  'al4_1', 'al4_3', 'heure_sport_extra', 'sport_amusement', 'sport_sante', 
+  'tb1', 'tb2', 'ao1', 'cn1', 'sd1'
+)
+
+# Filtrer le dataframe pour ne garder que les colonnes d'intérêt
+df_filtered <- df[, ..columns_of_interest]
+```
+## Voir les valuers dans chacune des colonnes 
+```{r}
+# Afficher les valeurs uniques pour chaque colonne dans columns_of_interest
+unique_values <- lapply(columns_of_interest, function(col) unique(df_filtered[[col]]))
+
+# Afficher les résultats
+names(unique_values) <- columns_of_interest
+unique_values
+
+```
+## Traiter les valeurs manquantes et explications 
+### $al4_1 , $al4_3 , $heure_sport_extra , $sport_amusement ,  $sport_sante , $tb2
+```{r}
+# Remplacer les valeurs manquantes (NA) par 0 dans toutes les colonnes de columns_of_interest
+df_filtered[, (columns_of_interest) := lapply(.SD, function(x) replace(x, is.na(x), 0)), .SDcols = columns_of_interest]
+
+# Vérifier que les valeurs manquantes ont été remplacées
+sapply(df_filtered[, ..columns_of_interest], function(x) sum(is.na(x)))  # Compter les valeurs NA restantes
+library(openxlsx)
+write.xlsx(df_filtered, "dataset_complet2_processed.xlsx")
+```
+
+
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
