@@ -7,17 +7,13 @@ data <- read_excel("dataset_complet.xlsx")
 
 # Interface utilisateur (UI)
 ui <- dashboardPage(
-  skin="green",
+  skin = "green",
   dashboardHeader(title = "Présentation du Projet"),
   dashboardSidebar(sidebarMenu(
     menuItem("Accueil", tabName = "accueil", icon = icon("home")),
-    menuItem(
-      "Objectif du Projet",
-      tabName = "objectif",
-      icon = icon("bullseye")
-    ),
-    menuItem("Participants", tabName = "participants", icon = icon("users")),
-    menuItem("Dataset", tabName = "dataset", icon = icon("table"))
+    menuItem("Objectif du Projet",tabName = "objectif",icon = icon("bullseye")),
+    menuItem("Dataset", tabName = "dataset", icon = icon("table")),
+    menuItem("Participants", tabName = "participants", icon = icon("users"))
   )),
   dashboardBody(
     tags$head(tags$meta(charset = "UTF-8")),
@@ -29,36 +25,11 @@ ui <- dashboardPage(
           width = 12,
           status = "success",
           solidHeader = TRUE,
-          "Bienvenue sur notre projet d'analyse de données en santé. Ce projet vise à explorer et prédire l'état mental des étudiants en analysant leurs conditions de vie, leurs habitudes et leur environnement."
-        )
-      )),
-      # Onglet Objectif du Projet
-      tabItem(tabName = "objectif", fluidRow(
+          "Bienvenue sur notre projet d'analyse de données en santé. Ce projet a été réalisé dans le cadre du cours d'analyse de données de santé afin de dérouler une analyse exploratoire d'un jeu de données dans le domaine de la santé avec les méthodes vues en cours."
+        ),
+        
         box(
-          title = "Objectif du Projet",
-          width = 12,
-          status = "success",
-          solidHeader = TRUE,
-          tags$p(
-            "L'objectif principal du projet est d'explorer et de prédire l'état mental des étudiants en fonction de divers facteurs :"
-          ),
-          tags$ul(
-            tags$li(
-              "Analyser l'influence des conditions familiales et socio-démographiques sur la santé mentale."
-            ),
-            tags$li(
-              "Etudier l'impact des habitudes de vie, comme le temps passé devant les écrans et l'activité physique."
-            ),
-            tags$li(
-              "Utiliser des modèles prédictifs pour identifier les facteurs clés influençant le bien-être mental."
-            )
-          )
-        )
-      )),
-      # Onglet Participants
-      tabItem(tabName = "participants", fluidRow(
-        box(
-          title = "équipe du Projet",
+          title = "Equipe du Projet",
           width = 12,
           status = "success",
           solidHeader = TRUE,
@@ -82,7 +53,7 @@ ui <- dashboardPage(
             color: white;
             margin-bottom: 0px;
           ",
-                       # Nom au bas de la bannière
+                       # Nom au bas de la banniC(re
                        tags$h2(
                          "Yire Asma SORO",
                          style = "
@@ -99,10 +70,10 @@ ui <- dashboardPage(
                        div(
                          style = "
               text-align: center;
-              margin-top: -70px; /* Faire remonter la photo sur la bannière */
+              margin-top: -70px; 
             ",
                          tags$img(
-                           src = "background.jpg",
+                           src = "profil_asma.jpg",
                            style = "
                 border-radius: 50%;
                 width: 120px;
@@ -125,7 +96,7 @@ ui <- dashboardPage(
                        title = NULL,
                        solidHeader = FALSE,
                        status = "primary",
-                       # Bannière avec une autre image de fond
+                       # BanniC(re avec une autre image de fond
                        style = "
             background-image: url('background.jpg');
             background-size: cover;
@@ -135,7 +106,7 @@ ui <- dashboardPage(
             color: white;
             margin-bottom: 0px;
           ",
-                       # Nom au bas de la bannière
+                       # Nom au bas de la banniC(re
                        tags$h2(
                          "Iyed DAMMAK",
                          style = "
@@ -155,7 +126,7 @@ ui <- dashboardPage(
               margin-top: -70px;
             ",
                          tags$img(
-                           src = "background.jpg",
+                           src = "profil_iyed.jpg",
                            style = "
                 border-radius: 50%;
                 width: 120px;
@@ -173,18 +144,86 @@ ui <- dashboardPage(
                    ))
         )
       )),
+      # Onglet Objectif du Projet
+      tabItem(tabName = "objectif", fluidRow(
+        box(
+          title = "Objectifs du Projet",
+          width = 12,
+          status = "success",
+          solidHeader = TRUE,
+          tags$p(
+            "L'objectif principal du projet est d'explorer et de prC)dire l'C)tat mental des C)tudiants en fonction de divers facteurs :"
+          ),
+          tags$ul(
+            tags$li(
+              "Analyser l'influence des conditions familiales et socio-dC)mographiques sur la santC) mentale."
+            ),
+            tags$li(
+              "Etudier l'impact des habitudes de vie, comme le temps passC) devant les C)crans et l'activitC) physique."
+            ),
+            tags$li(
+              "Utiliser des modC(les prC)dictifs pour identifier les facteurs clC)s influenC'ant le bien-C*tre mental."
+            )
+          )
+        )
+      )),
+
       # Onglet Dataset
       tabItem(tabName = "dataset", fluidRow(
+        fluidRow(
+          column(width = 4, div(
+            style = "margin: 10px; padding: 10px;",
+            infoBox(
+              title = "Nombre d'observations",
+              value = "3404 Individus",
+              icon = icon("database"),
+              color = "purple",
+              width = NULL,
+              # Laissez width à NULL pour éviter les conflits
+              fill = TRUE
+            )
+          )),
+          column(width = 4, div(
+            style = "margin: 10px; padding: 10px;",
+            infoBox(
+              title = "Nombre de variables explicatives",
+              value = "16 variables",
+              icon = icon("cogs"),
+              color = "yellow",
+              width = NULL,
+              fill = TRUE
+            )
+          )),
+          column(width = 4, div(
+            style = "margin: 10px; padding: 10px;",
+            infoBox(
+              title = "Variables d'intérêt",
+              value = "4 variables liées à la santé mentale",
+              icon = icon("bullseye"),
+              color = "green",
+              width = NULL,
+              fill = TRUE
+            )
+          ))
+        )
+        ,
+        #aperçu du dataset
         box(
           title = "Aperçu du Dataset",
           width = 12,
           status = "warning",
           solidHeader = TRUE,
+          color = "green",
           DTOutput("data_table")
         )
       ))
     )
-  )
+  ),
+  # Onglet Participants
+  tabItem(tabName = "participants", fluidRow(
+   
+  ))
+  
 )
 
 # Serveur
