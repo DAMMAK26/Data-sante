@@ -237,5 +237,6 @@ preds <- resultats_et_predictions$preds
 results
 preds
 
-
+# Exemple pour la colonne 'ss2'
+table(df$sm1)
 

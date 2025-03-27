@@ -2,7 +2,7 @@
 library(tidymodels)
 library(data.table)
 library(readxl)
-
+library(klaR)
 # Charger les données
 data <- read_excel("dataset_complet2.xlsx")
 df <- as.data.table(data)

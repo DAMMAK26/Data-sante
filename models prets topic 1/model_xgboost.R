@@ -58,10 +58,10 @@ train_rf_model <- function(target_column) {
   
   
   
-  xgb <- boost_tree(mtry = tune(), trees = 500, learn_rate = tune()) %>% set_engine("xgboost") %>%    set_mode("classification")
+  xgb <- boost_tree(mtry = tune(), trees = 100, learn_rate = tune()) %>% set_engine("xgboost") %>%    set_mode("classification")
   xgb_wf <- workflow() %>% add_model(xgb) %>% add_formula(formula)
   cv_folds <- vfold_cv(train, v = 5, strata = target_column)
-  xgb_results <- tune_grid(xgb_wf, resamples = cv_folds, grid = 10, control = control_grid())
+  xgb_results <- tune_grid(xgb_wf, resamples = cv_folds, grid = 3, control = control_grid(verbose = TRUE))
   best_xgb <- select_best(xgb_results, metric = "accuracy")
   final_xgb <- finalize_workflow(xgb_wf, best_xgb)
   trained_xgb <- fit(final_xgb, data = train)

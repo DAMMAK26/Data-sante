@@ -49,7 +49,7 @@ train_nb_model <- function(target_column) {
   train[, (predictor_columns) := lapply(.SD, as.numeric), .SDcols = predictor_columns]
   test[, (predictor_columns) := lapply(.SD, as.numeric), .SDcols = predictor_columns]
   
-  # Convertir la variable cible en facteur dans l'ensemble d'entraînement et de test
+    # Convertir la variable cible en facteur dans l'ensemble d'entraînement et de test
   train[[target_column]] <- as.factor(train[[target_column]])
   test[[target_column]] <- as.factor(test[[target_column]])
   

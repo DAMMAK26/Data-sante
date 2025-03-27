@@ -10,7 +10,7 @@ df <- df[complete.cases(df), ]
 
 # Liste des variables d'intérêt
 columns_of_interest <- c(
-  'ss4','ss2',  # Comportements préventifs
+  'ss4',  # Comportements préventifs
   'sante','tb1',   # Anxiété de santé
   'pr1a'	,'pr1b'	,'pr1c',	'pr1d','pr1e','pr1f','pr1g',	'pr1h', 'pr2a', 	'pr2b'	,'pr2c'	,'pr2d'	, 'pr2e'	,'pr2f'	,'pr2g',	'pr2h',  # Perception des risques environnementaux
   'alimentation_saine','ptit_dej_semaine','ptit_dej_weekend','al4_1', 'al4_3', 'jour_sport','sport_extra', 'sd1',  # Comportements de santé
@@ -28,15 +28,16 @@ df_split <- initial_split(df_filtered, prop = 0.8)
 train <- training(df_split)
 test <- testing(df_split)
 # Liste des variables cibles # Performance scolaire
-target_columns <- c('ss4')  
+target_column <- c('ss4')  
 
 # Liste des variables explicatives
-predictor_columns <- c(  'ss2',  'sante','tb1'   ,  'pr1a'	,'pr1b'	,'pr1c',	'pr1d','pr1e','pr1f','pr1g',	'pr1h', 'pr2a', 	'pr2b'	,'pr2c'	,'pr2d'	, 'pr2e'	,'pr2f'	,'pr2g',	'pr2h',  # Perception des risques environnementaux
+predictor_columns <- c(   'sante','tb1'   ,  'pr1a'	,'pr1b'	,'pr1c',	'pr1d','pr1e','pr1f','pr1g',	'pr1h', 'pr2a', 	'pr2b'	,'pr2c'	,'pr2d'	, 'pr2e'	,'pr2f'	,'pr2g',	'pr2h',  # Perception des risques environnementaux
                          'alimentation_saine','ptit_dej_semaine','ptit_dej_weekend','al4_1', 'al4_3', 'jour_sport','sport_extra', 'sd1',  # Comportements de santé
                          'ao1', 'ao2a', 'cn1',  # Consommation de substances
                          'niveau_scol', 'type_ecole', 'vf2_1',	'vf2_2'	,'vf2_3',	'vf2_4',	'vf2_5',	'vf2_6'	,'vf2_7',
                          'sexe', 'age'  # Caractéristiques sociodémographiques
 )
+
 
 
 
