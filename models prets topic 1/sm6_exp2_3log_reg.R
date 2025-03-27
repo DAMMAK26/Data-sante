@@ -81,6 +81,7 @@ table(test$sm2c)
 
 
 
+
 library(tidymodels)
 cv_folds <- vfold_cv(train, v = 10, strata = sm3)
 
@@ -187,6 +188,19 @@ print(predictor_columns)
 # Convertir les variables explicatives en numériques si nécessaire
 train[, (predictor_columns) := lapply(.SD, as.factor), .SDcols = predictor_columns]
 test[, (predictor_columns) := lapply(.SD, as.factor), .SDcols = predictor_columns]
+
+
+nouveau_dataset <- train %>% select((predictor_columns))
+
+unique_values <- lapply(predictor_columns, function(col) {
+  as.data.frame(table(nouveau_dataset[[col]], useNA = "ifany"))
+})
+
+# Donner les noms des colonnes à la liste
+names(unique_values) <- predictor_columns
+
+# Afficher les résultats
+unique_values
 
 train$pond <- as.numeric(train$pond)
 
