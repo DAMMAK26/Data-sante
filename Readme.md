@@ -1,29 +1,3 @@
-<!-- Si vous souhaitez appliquer un style personnalisé en local, vous pouvez ajouter ce bloc HTML -->
-<style>
-  body {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  h1 { font-size: 2.5em; }
-  h2 { font-size: 2em; }
-  h3 { font-size: 1.75em; }
-  ul {
-    list-style-type: disc;
-    margin-left: 1.5em;
-  }
-  code {
-    background-color: #f4f4f4;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  }
-  pre {
-    background-color: #f4f4f4;
-    padding: 10px;
-    border-radius: 4px;
-    overflow-x: auto;
-  }
-</style>
 
 # Application Shiny d'Analyse de la Santé Mentale des Jeunes
 
@@ -138,8 +112,12 @@ Ce projet a été réalisé par deux membres passionnés par la data science et 
    Installer R, RStudio et les packages nécessaires. Vous pouvez installer les packages via :
    ```r
    install.packages(c("shiny", "shinydashboard", "DT", "readxl", "ggplot2", "parsnip", "workflows", "data.table"))
-   shiny::runApp("app.R")
 
+
+2. **Lancement de l'application**
+```r
+   shiny::runApp("app.R")
+```
 
 
 ## Impact et Potentiel
