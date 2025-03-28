@@ -1,16 +1,6 @@
 
 # Application Shiny d'Analyse de la Santé Mentale des Jeunes
 
-## Contexte et Statistiques Clés
-
-La santé mentale des jeunes est un enjeu crucial aujourd'hui. Des études récentes montrent que :
-
-- **20%** des jeunes français (15-24 ans) se déclarent régulièrement anxieux.
-- **1 étudiant sur 4** vit un stress important quotidiennement.
-- Les jeunes issus de milieux défavorisés présentent un risque accru de **40%** de troubles psychologiques.
-- **70%** des victimes de harcèlement souffrent de troubles mentaux significatifs.
-
-Ces chiffres démontrent l'urgence d'intervenir et la nécessité de développer des outils permettant d'identifier rapidement les signes de détresse. C'est dans ce contexte que s'inscrit notre projet.
 
 ## Présentation du Projet
 
@@ -29,6 +19,9 @@ L'application est organisée en plusieurs onglets, chacun dédié à une partie 
 
 - **Accueil**  
   Présentation du projet, des statistiques clés et de l'importance du thème, avec des visuels percutants et des liens vers des sources fiables (Santé Publique France, Ministère de la Santé, etc.).
+![presentation statistique](presentation.png)
+Ces chiffres démontrent l'urgence d'intervenir et la nécessité de développer des outils permettant d'identifier rapidement les signes de détresse. C'est dans ce contexte que s'inscrit notre projet.
+
 
 - **Objectif du Projet**  
   Description détaillée du thème, des hypothèses à tester, et des variables d’intérêt et explicatives.
@@ -40,7 +33,10 @@ L'application est organisée en plusieurs onglets, chacun dédié à une partie 
   Visualisation des distributions de chaque variable via des graphiques générés avec `ggplot2`, permettant une analyse rapide des tendances.
 
 - **Résultats**  
-  Interface de saisie du questionnaire et affichage en temps réel des prédictions issues des modèles (sm1, sm2a, sm3, sm6).
+  IIci, l'étudiant repond directement aux questions et on affichage en temps réel des prédictions issues des modèles (sm1, sm2a, sm3, sm6).
+Voici comment se présentent les résultats sur l'application
+  
+  ![resultat](predictions.png)
 
 - **Explications**  
   Détail des modèles prédictifs et interprétation des coefficients (transformés en odds ratios), avec des recommandations pour l'intervention.
@@ -77,14 +73,7 @@ Cette analyse détaillée aide les enseignants à mieux comprendre les signaux d
 ## Présentation de l'Équipe
 
 Ce projet a été réalisé par deux membres passionnés par la data science et la santé publique :
-
-- **Yiré Asma SORO**  
-  Responsable de l'analyse de données et de la modélisation prédictive.  
-  Profil LinkedIn : [Yiré Asma SORO](https://www.linkedin.com)
-
-- **Iyed DAMMAK**  
-  En charge du développement de l'application Shiny et de l'interface utilisateur.  
-  Profil LinkedIn : [Iyed DAMMAK](https://www.linkedin.com)
+ ![equipe projet](equipe_projet.png)
 
 ## Technologies et Outils Utilisés
 
