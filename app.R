@@ -546,19 +546,56 @@ ui <- dashboardPage(
     )
       
      ,
-      # Onglet explcations
-      tabItem(
-        tabName = "Explications",
-        fluidRow(
-          box(
-            title = "explications",
-            width = 12,
-            status = "success",
-            solidHeader = TRUE,
-            "Les différentes prédictions......."
-          )
-        )
+  # Onglet explcations
+  tabItem(
+    tabName = "Explications",
+    fluidRow(
+      box(
+        title = "Explications des modèles prédictifs",
+        width = 12,
+        status = "success",
+        solidHeader = TRUE,
+        HTML("
+    <h3>Analyse des effets des facteurs influents en pourcentage</h3>
+
+    <p>Nous avons construit deux modèles de régression multinomiale pour mieux comprendre les facteurs liés à la santé mentale des jeunes :</p>
+    <ul>
+      <li><strong>Modèle SM1</strong> : prédiction du niveau de bien-être général (très malheureux à très heureux).</li>
+      <li><strong>Modèle SM3</strong> : prédiction du mal-être psychologique prolongé (oui / non / je ne comprends pas).</li>
+    </ul>
+
+    <p>Les coefficients estimés par les modèles ont été transformés en <strong>odds ratios</strong> pour interpréter l'effet de chaque variable. Cela permet de mesurer combien un facteur augmente ou diminue la probabilité de mal-être ou de bien-être.</p>
+
+    <h4>Facteurs influents pour le mal-être prolongé (SM3)</h4>
+    <ul>
+      <li><strong>Sexe féminin</strong> : coefficient = +0.95 → odds ratio ≈ 2.58 → <strong>+158%</strong> de probabilité de mal-être par rapport aux garçons.</li>
+      <li><strong>Situation financière très à l'aise</strong> : coef = +0.90 → OR ≈ 2.46 → <strong>+146%</strong> de chances d'éviter un mal-être prolongé.</li>
+      <li><strong>Épilepsie déclarée</strong> : coef = +1.89 → OR ≈ 6.63 → <strong>+563%</strong> de risque de mal-être prolongé.</li>
+      <li><strong>Sentiment de sécurité à l’école (rarement)</strong> : coef = +0.42 → OR ≈ 1.52 → <strong>+52%</strong> de chances d'aller mieux.</li>
+    </ul>
+
+    <h4>Facteurs influents pour le bien-être général (SM1)</h4>
+    <ul>
+      <li><strong>Très bonne santé perçue</strong> : coef = +2.08 → OR ≈ 8.00 → <strong>+700%</strong> de probabilité de se sentir heureux(se).</li>
+      <li><strong>Niveau scolaire : 2nde Générale</strong> : coef = -0.58 → OR ≈ 0.56 → <strong>-44%</strong> de probabilité de bien-être par rapport à la 6e.</li>
+      <li><strong>Se sentir en sécurité à l’école (toujours)</strong> : coef = +0.53 → OR ≈ 1.70 → <strong>+70%</strong> de chances de se sentir bien.</li>
+      <li><strong>Troubles du langage</strong> : coef = -1.52 → OR ≈ 0.22 → <strong>-78%</strong> de chances de se sentir heureux(se).</li>
+      <li><strong>Épilepsie</strong> : coef = +1.02 → OR ≈ 2.77 → <strong>+177%</strong> de chances de se sentir heureux — un effet contre-intuitif, qui peut refléter un meilleur accompagnement médical.</li>
+    </ul>
+
+    <h4>À retenir</h4>
+    <ul>
+      <li>Un coefficient de +0.69 correspond à un doublement du risque (+100%).</li>
+      <li>Un coefficient de -0.69 correspond à une réduction de moitié (-50%).</li>
+      <li>Les effets varient selon les modèles, certains facteurs influencent le bien-être (sm1), d'autres le mal-être prolongé (sm3), parfois les deux.</li>
+    </ul>
+
+    <p>Ces analyses nous permettent de mieux comprendre l'impact des facteurs sociaux, scolaires, médicaux et émotionnels sur la santé mentale des jeunes, et de mieux cibler les politiques de prévention.</p>
+  ")
       )
+      
+    )
+  )
     )  # Fin tabItems
   )  # Fin dashboardBody
 )  # Fin dashboardPage
