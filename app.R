@@ -568,7 +568,6 @@ ui <- dashboardPage(
 
     <h4>Facteurs influents pour le mal-être prolongé (SM3)</h4>
     <ul>
-      <li><strong>Sexe féminin</strong> : coefficient = +0.95 → odds ratio ≈ 2.58 → <strong>+158%</strong> de probabilité de mal-être par rapport aux garçons.</li>
       <li><strong>Situation financière très à l'aise</strong> : coef = +0.90 → OR ≈ 2.46 → <strong>+146%</strong> de chances d'éviter un mal-être prolongé.</li>
       <li><strong>Épilepsie déclarée</strong> : coef = +1.89 → OR ≈ 6.63 → <strong>+563%</strong> de risque de mal-être prolongé.</li>
       <li><strong>Sentiment de sécurité à l’école (rarement)</strong> : coef = +0.42 → OR ≈ 1.52 → <strong>+52%</strong> de chances d'aller mieux.</li>
@@ -583,7 +582,7 @@ ui <- dashboardPage(
       <li><strong>Épilepsie</strong> : coef = +1.02 → OR ≈ 2.77 → <strong>+177%</strong> de chances de se sentir heureux — un effet contre-intuitif, qui peut refléter un meilleur accompagnement médical.</li>
     </ul>
 
-    <h4>À retenir</h4>
+    <h4>PS:</h4>
     <ul>
       <li>Un coefficient de +0.69 correspond à un doublement du risque (+100%).</li>
       <li>Un coefficient de -0.69 correspond à une réduction de moitié (-50%).</li>

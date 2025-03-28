@@ -437,12 +437,12 @@ extract_per_class_accuracy <- function(result, target_col)
   
   
   
-results_sm2c <- get_all_models('sm2c', train, test)
-metrics_result_sm2c <- extract_metrics(results_sm2c)
-metrics_result_sm2c
+results_sm1 <- get_all_models('sm1', train, test)
+metrics_result_sm1 <- extract_metrics(results_sm1)
+metrics_result_sm1
 
-per_class_acc_sm2c <- extract_per_class_accuracy(results_sm2b, "sm2c")
-print(per_class_acc_sm2c)
+per_class_acc_sm1 <- extract_per_class_accuracy(results_sm1, "sm1")
+print(per_class_acc_sm1)
 
 
 
