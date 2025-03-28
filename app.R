@@ -3,7 +3,9 @@ library(shinydashboard)
 library(DT)
 library(readxl)
 library(ggplot2)
-
+library(parsnip)  # au cas où
+library(workflows) 
+library(data.table)
 # Chargement des données
 data <- read_excel("dataset_complet1.xlsx")
 df <- data
@@ -504,15 +506,41 @@ ui <- dashboardPage(
       checkboxGroupInput("ss12_Reconnu_personnes", "As-tu reconnu des personnes ?", choices = c("Oui")),
       checkboxGroupInput("ss12_Reconnu_moi_meme", "Tu t'es reconnu(e) ?", choices = c("Oui"))
     )
-    , actionButton("maj_reponses", "Mettre à jour les réponses encodées", icon = icon("refresh"), class = "btn-success")
-    , box(
-      title = "Résultats",
+    
+  ),
+  
+  
+  
+  
+  # Bouton centré dans une rangée à part
+  fluidRow(
+    column(
       width = 12,
-      status = "success",
-      solidHeader = TRUE,
-      h4("Les différentes prédictions......."),
-      verbatimTextOutput("resultats_questionnaire")  # Affichage des réponses encodées
-  )
+      div(
+        style = "text-align: center; margin-top: 20px; margin-bottom: 20px;",
+        actionButton(
+          inputId = "maj_reponses",
+          label = "Mise à jour ",
+          icon = icon("refresh"),
+          class = "btn btn-success btn-lg"
+        )
+      )
+    )
+  ),
+  
+  # Résultats dans une box bien espacée
+  fluidRow(
+    column(
+      width = 12,
+      box(
+        title = "Résultats",
+        width = 12,
+        status = "success",
+        solidHeader = TRUE,
+        h4("Les prédictions......."),
+        verbatimTextOutput("resultats_questionnaire")
+      )
+    )
   )
 
     )
@@ -538,7 +566,7 @@ ui <- dashboardPage(
 # Serveur
 server <- function(input, output, session) {
   
-  # Afficher le dataset avec DT, avec scroll horizontal activé
+  # Afficher le dataset dans l’onglet "Dataset"
   output$data_table <- DT::renderDataTable({
     DT::datatable(data, options = list(scrollX = TRUE))
   })
@@ -546,7 +574,6 @@ server <- function(input, output, session) {
   # Analyse univariée pour la variable sélectionnée
   output$univPlot <- renderPlot({
     var <- input$variable
-    # Conversion en facteur pour variables catégorielles
     x_data <- factor(df[[var]])
     
     ggplot(df, aes(x = x_data)) +
@@ -556,17 +583,10 @@ server <- function(input, output, session) {
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   })
   
-  # 3. Réponses du questionnaire encodées à partir de 1
-  encode_input <- function(x) {
-    return (as.integer(x))
-    if (is.null(x)) return(NA)
-    if (is.character(x)) return(as.integer(factor(x)))
-    if (is.numeric(x)) return(as.integer(x) )
-    if (is.logical(x)) return(as.integer(x))
-    return(NA)
-  }
+  # Fonction d’encodage simple
+  encode_input <- function(x) as.integer(x)
   
-  # Réactivité aux changements de tous les inputs
+  # Réponses encodées à partir du questionnaire
   reponses_encodées <- reactive({
     list(
       sexe = encode_input(input$sexe),
@@ -575,16 +595,16 @@ server <- function(input, output, session) {
       situation_fin = encode_input(input$situation_fin),
       absence_scol = encode_input(input$absence_scol),
       secu_scol = encode_input(input$secu_scol),
-      violence_scol = length(input$violence_scol) + 1,
+      violence_scol = length(input$violence_scol) ,
       ecole_love = encode_input(input$ecole_love),
       result5ts_s3ol = encode_input(input$result5ts_s3ol),
       sante = encode_input(input$sante),
       etat_corps = encode_input(input$etat_corps),
       accord_poids = encode_input(input$accord_poids),
       est_malade = encode_input(input$est_malade),
-      maladie_trouble_langage = length(input$maladie_trouble_langage) + 1,
-      maladie_handicap_intellectuel = length(input$maladie_handicap_intellectuel) + 1,
-      maladie_epilepsie = length(input$maladie_epilepsie) + 1,
+      maladie_trouble_langage = length(input$maladie_trouble_langage) ,
+      maladie_handicap_intellectuel = length(input$maladie_handicap_intellectuel) ,
+      maladie_epilepsie = length(input$maladie_epilepsie) ,
       visite_medecin = encode_input(input$visite_medecin),
       prof_sante = encode_input(input$prof_sante),
       alimentation_saine = encode_input(input$alimentation_saine),
@@ -627,21 +647,76 @@ server <- function(input, output, session) {
       ss12_Pas_aime = ifelse(is.null(input$ss12_Pas_aime), 0, 1),
       ss12_Reconnu_personnes = ifelse(is.null(input$ss12_Reconnu_personnes), 0, 1),
       ss12_Reconnu_moi_meme = ifelse(is.null(input$ss12_Reconnu_moi_meme), 0, 1)
-      
     )
   })
   
-  # Affichage réactif
-  observeEvent(input$maj_reponses, {
-    output$resultats_questionnaire <- renderPrint({
-      reponses_encodées()
-    })
+  # Chargement des modèles SVM et log_reg
+svm_model_sm6 <- readRDS("svm_model_sm6.rds")
+svm_model_sm2a <- readRDS("svm_model_sm2a.rds")
+log_reg_model_sm1 <- readRDS("log_reg_model_sm1.rds")
+log_reg_model_sm3 <- readRDS("log_reg_model_sm3.rds")
+
+# --- (aucune modification jusqu'à observeEvent) ---
+
+# Action lors du clic sur "Mettre à jour les réponses"
+observeEvent(input$maj_reponses, {
+  responses_df <- as.data.frame(reponses_encodées())
+  responses_df[] <- lapply(responses_df, as.factor)
+  
+  # --- Prédictions ---
+  expected_vars_sm6 <- all.vars(svm_model_sm6$pre$actions$formula$formula)[-1]
+  responses_df_sm6 <- responses_df[, expected_vars_sm6, drop = FALSE]
+  prediction_sm6 <- predict(svm_model_sm6, new_data = responses_df_sm6)$.pred_class
+  
+  expected_vars_sm2a <- all.vars(svm_model_sm2a$pre$actions$formula$formula)[-1]
+  responses_df_sm2a <- responses_df[, expected_vars_sm2a, drop = FALSE]
+  prediction_sm2a <- predict(svm_model_sm2a, new_data = responses_df_sm2a)$.pred_class
+  
+  expected_vars_sm1 <- all.vars(log_reg_model_sm1$pre$actions$formula$formula)[-1]
+  responses_df_sm1 <- responses_df[, expected_vars_sm1, drop = FALSE]
+  prediction_sm1 <- predict(log_reg_model_sm1, new_data = responses_df_sm1)$.pred_class
+  
+  expected_vars_sm3 <- all.vars(log_reg_model_sm3$pre$actions$formula$formula)[-1]
+  responses_df_sm3 <- responses_df[, expected_vars_sm3, drop = FALSE]
+  prediction_sm3 <- predict(log_reg_model_sm3, new_data = responses_df_sm3)$.pred_class
+  
+  # --- Affichage explicite et interprété ---
+  output$resultats_questionnaire <- renderPrint({
+    cat("\n🧪 Voici les prédictions basées sur vos réponses :\n\n")
+    
+    cat("🌟 Pensées suicidaires (sm6) : ")
+    if (prediction_sm6 == 2) {
+      cat("Le modèle détecte un risque de pensées suicidaires. Un soutien psychologique pourrait être bénéfique.\n")
+    } else {
+      cat("Aucun signe de pensées suicidaires détecté.\n")
+    }
+    
+    cat("\n🧠 Sentiments de solitude, anxiété ou troubles du sommeil (sm2a) : ")
+    if (prediction_sm2a == 2) {
+      cat("Le modèle indique une probabilité de troubles comme la solitude ou l'anxiété. Il est conseillé d’en discuter avec un professionnel.\n")
+    } else {
+      cat("Pas de signe notable de solitude ou d’anxiété détecté.\n")
+    }
+    
+    cat("\n💬 État général de bien-être mental (sm1) : ")
+    if (prediction_sm1 == 1) {
+      cat("Malheureux(se)\n")
+    }  else {
+      cat("Heureux(se)\n")
+    }
+    
+    cat("\n📊 Mal-être psychologique prolongé (sm3) : ")
+     if (prediction_sm3 == 1) {
+      cat("Le modèle indique l'absence de mal-être prolongé.\n")
+    } else if (prediction_sm3 == 2) {
+      cat("Présence de mal-être psychologique prolongé détectée. Il peut être utile de consulter un professionnel de santé mentale.\n")
+    } 
   })
-  
-  
- 
+})
+
   
 }
+
 
 # Lancer l'application Shiny
 shinyApp(ui, server)

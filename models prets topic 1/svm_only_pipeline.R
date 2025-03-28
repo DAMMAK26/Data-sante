@@ -1,0 +1,166 @@
+
+# --------------------- SCRIPT FINAL SVM UNIQUEMENT --------------------- #
+library(tidymodels)
+library(data.table)
+library(readxl)
+library(dplyr)
+library(tidyr)
+
+# Charger les données
+data <- read_excel('dataset_complet3.xlsx')
+df <- as.data.table(data)
+df <- df[complete.cases(df), ]
+
+# Liste des variables cibles
+target_columns <- c('sm2a')
+
+# Binarisation
+binarize_target <- function(df, target) {
+  if (target == "sm1") {
+    df[[target]] <- ifelse(df[[target]] %in% c(0, 1, 2), 1, 2)
+  } else if (target == "sm3") {
+    df[[target]] <- ifelse(df[[target]] %in% c(1, 2), 1, 2)
+  } else if (target %in% c("sm2a", "sm2b", "sm2c")) {
+    df[[target]] <- ifelse(df[[target]] %in% c(1, 2, 3), 1, 2)
+  }
+  df[[target]] <- as.factor(df[[target]])
+  return(df)
+}
+df<-df[1:1500,]
+
+# Split
+df_split <- initial_split(df, prop = 0.8)
+train <- training(df_split)
+test <- testing(df_split)
+
+
+for (col in target_columns) {
+  train <- binarize_target(train, col)
+  test <- binarize_target(test, col)
+}
+
+# Pondération
+train$pond <- frequency_weights(as.numeric(train$pond))
+test$pond <- frequency_weights(as.numeric(test$pond))
+
+# Variables explicatives
+problematique_columns <- c("ad3_Rien", "ad3_Autre", "ad3_Tabac", "ad3_Codeine", 
+                           "ad3_Lean", "ad3_Morphine", "ad3_Flacka", "ad3_DMT", "ss6_Pharmacie","ndegobs","pond")
+predictor_columns <- setdiff(colnames(train), c(target_columns, problematique_columns))
+predictor_columns <- c(
+  # Socio-économique / Scolaire
+  "sexe", "niveau_scol", "age", "situation_fin", "absence_scol", "secu_scol", "violence_scol",
+  "ecole_love", "result5ts_s3ol",
+  
+  # Santé / Perception de soi
+  "sante", "etat_corps", "accord_poids", "est_malade",
+  "maladie_trouble_langage", "maladie_handicap_intellectuel", "maladie_epilepsie",
+  "visite_medecin", "prof_sante",
+  
+  # Alimentation et hygiène de vie
+  "alimentation_saine", "ptit_dej_semaine", "ptit_dej_weekend",
+  "manger_fruits", "manger_legumes", "mange_sucre", "mange_repas_rapide",
+  "jour_sport", "sport_extra",
+  
+  # Ressenti / soutien social
+  "sm7", "cv1", "cv2a", "cv2b", "cv3", "cv5",
+  
+  # Violences / Victimisations / Harcèlement
+  "vi1", "vi2_Personne_mon_age", "vi2_Membre_famille", "vi2_Quelquun_inconnu",
+  "vi3_Ecole", "vi3_Maison", "vi3_Quartier",
+  "vi4_Personne_violente", "vi4_Resultats_scolaires", "vi4_Colere",
+  "vi4_Corps_image", "vi4_Comportement", "vi4_Alcool_drogues",
+  
+  # Addictions / consommation
+  "ad3_Cannabis", "ad3_Cocaine", "ad3_Alcool",
+  
+  # Sexualité / situations à risque
+  "ss6_Dispensaire_CMS_ESPAS_CMP_CCF", "ss6_College_Lycee",
+  "ss7_Partenaire_ne_voulait_pas", "ss7_Alcool_fume",
+  
+  # Ressenti / image de soi
+  "ss12_Choquant", "ss12_Accepte_d_en_faire", "ss12_Pas_aime",
+  "ss12_Reconnu_personnes", "ss12_Reconnu_moi_meme"
+)
+# Vérification
+print(predictor_columns)
+
+train[, (predictor_columns) := lapply(.SD, as.factor), .SDcols = predictor_columns]
+test[, (predictor_columns) := lapply(.SD, as.factor), .SDcols = predictor_columns]
+
+# Entraînement SVM
+train_svm_model <- function(target_column, train, test) {
+  formula <- as.formula(paste(target_column, "~", paste(predictor_columns, collapse = " + ")))
+  model <- svm_rbf(cost = tune()) %>%
+    set_engine("kernlab") %>%
+    set_mode("classification")
+  
+  wf <- workflow() %>%
+    add_model(model) %>%
+    add_formula(formula)
+  
+  cv <- vfold_cv(train, v = 2, strata = target_column)
+  
+  tuned <- tune_grid(
+    wf,
+    resamples = cv,
+    grid = 10,
+    control = control_grid(verbose = TRUE)
+  )
+  final_model <- finalize_workflow(wf, select_best(tuned, metric = "accuracy"))
+  
+  fit(final_model, data = train)
+}
+
+# Tester un modèle
+test_model <- function(model, target_column) {
+  preds <- predict(model, new_data = test)$.pred_class
+  test[[target_column]] <- factor(test[[target_column]], levels = levels(preds))
+  
+  metrics <- metric_set(accuracy, precision, recall, f_meas)
+  
+  results_df <- tibble(
+    truth = test[[target_column]],
+    estimate = preds,
+    pond = test$pond
+  )
+  
+  metrics(results_df, truth = truth, estimate = estimate, case_weights = pond)
+}
+
+# Accuracy par classe
+extract_per_class_accuracy <- function(preds, truth_vec) {
+  pred_vec <- factor(preds, levels = levels(truth_vec))
+  
+  df <- tibble(truth = truth_vec, prediction = pred_vec)
+  all_classes <- levels(truth_vec)
+  
+  df %>%
+    group_by(truth) %>%
+    summarise(
+      correct = sum(truth == prediction, na.rm = TRUE),
+      total = n(),
+      accuracy = ifelse(total > 0, correct / total, NA_real_),
+      .groups = 'drop'
+    ) %>%
+    complete(truth = all_classes, fill = list(correct = 0, total = 0, accuracy = NA_real_)) %>%
+    mutate(accuracy = ifelse(is.na(accuracy), "None", as.character(round(accuracy, 3))))
+}
+
+
+
+# Entraînement/test pour chaque cible
+results <- list()
+for (col in target_columns) {
+  cat("===== Traitement de", col, "=====
+")
+  model <- train_svm_model(col, train, test)
+  print("completed train ")
+  metrics <- test_model(model, col)
+  preds <- predict(model, new_data = test, type = "class")$.pred_class
+  acc_per_class <- extract_per_class_accuracy(preds, test[[col]])
+  results[[col]] <- list(metrics = metrics, per_class_accuracy = acc_per_class)
+  saveRDS(model, paste0("svm_model_", col, ".rds"))
+}
+results
+

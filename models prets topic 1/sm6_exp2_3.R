@@ -145,6 +145,43 @@ problematique_columns <- c("ad3_Rien", "ad3_Autre", "ad3_Tabac", "ad3_Codeine",
                            "ad3_Lean", "ad3_Morphine", "ad3_Flacka", "ad3_DMT", "ss6_Pharmacie","ndegobs","pond")
 
 predictor_columns <- setdiff(predictor_columns,problematique_columns)
+predictor_columns <- c(
+  # Socio-économique / Scolaire
+  "sexe", "niveau_scol", "age", "situation_fin", "absence_scol", "secu_scol", "violence_scol",
+  "ecole_love", "result5ts_s3ol",
+  
+  # Santé / Perception de soi
+  "sante", "etat_corps", "accord_poids", "est_malade",
+  "maladie_trouble_langage", "maladie_handicap_intellectuel", "maladie_epilepsie",
+  "visite_medecin", "prof_sante",
+  
+  # Alimentation et hygiène de vie
+  "alimentation_saine", "ptit_dej_semaine", "ptit_dej_weekend",
+  "manger_fruits", "manger_legumes", "mange_sucre", "mange_repas_rapide",
+  "jour_sport", "sport_extra",
+  
+  # Ressenti / soutien social
+  "sm7", "cv1", "cv2a", "cv2b", "cv3", "cv5",
+  
+  # Violences / Victimisations / Harcèlement
+  "vi1", "vi2_Personne_mon_age", "vi2_Membre_famille", "vi2_Quelquun_inconnu",
+  "vi3_Ecole", "vi3_Maison", "vi3_Quartier",
+  "vi4_Personne_violente", "vi4_Resultats_scolaires", "vi4_Colere",
+  "vi4_Corps_image", "vi4_Comportement", "vi4_Alcool_drogues",
+  
+  # Addictions / consommation
+  "ad3_Cannabis", "ad3_Cocaine", "ad3_Alcool",
+  
+  # Sexualité / situations à risque
+  "ss6_Dispensaire_CMS_ESPAS_CMP_CCF", "ss6_College_Lycee",
+  "ss7_Partenaire_ne_voulait_pas", "ss7_Alcool_fume",
+  
+  # Ressenti / image de soi
+  "ss12_Choquant", "ss12_Accepte_d_en_faire", "ss12_Pas_aime",
+  "ss12_Reconnu_personnes", "ss12_Reconnu_moi_meme"
+)
+# Vérification
+print(predictor_columns)
 # Vérification
 print(predictor_columns)
 
@@ -395,37 +432,6 @@ extract_preds <- function(result) {
   return(metrics_only)
 }
 
-results_sm6 <- get_all_models('sm6', train, test)
-metrics_result_sm6 <- extract_metrics(results_sm6)
-metrics_result_sm6
-
-
-
-
-results_sm1 <- get_all_models('sm1', train, test)
-metrics_result_sm1 <- extract_metrics(results_sm1)
-metrics_result_sm1
-
-
-
-
-
-
-results_sm3 <- get_all_models('sm3', train, test)
-metrics_result_sm3 <- extract_metrics(results_sm3)
-metrics_result_sm3
-
-results_sm2a <- get_all_models('sm2a', train, test)
-metrics_result_sm2a <- extract_metrics(results_sm2a)
-metrics_result_sm2a
-
-results_sm2b <- get_all_models('sm2b', train, test)
-metrics_result_sm2b <- extract_metrics(results_sm2b)
-metrics_result_sm2b
-
-results_sm2c <- get_all_models('sm2c', train, test)
-metrics_result_sm2c <- extract_metrics(results_sm2c)
-metrics_result_sm2c
 
 
 extract_per_class_accuracy <- function(result, target_col) {
@@ -465,6 +471,75 @@ extract_per_class_accuracy <- function(result, target_col) {
   
   return(per_class_acc_list)
 }
+
+
+results_sm3 <- get_all_models('sm3', train, test)
+metrics_result_sm3 <- extract_metrics(results_sm3)
+metrics_result_sm3
+
+per_class_acc_sm3 <- extract_per_class_accuracy(results_sm3, "sm3")
+print(per_class_acc_sm3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+results_sm6 <- get_all_models('sm6', train, test)
+metrics_result_sm6 <- extract_metrics(results_sm6)
+metrics_result_sm6
+
+
+
+
+results_sm1 <- get_all_models('sm1', train, test)
+metrics_result_sm1 <- extract_metrics(results_sm1)
+metrics_result_sm1
+
+
+
+
+
+
+results_sm3 <- get_all_models('sm3', train, test)
+metrics_result_sm3 <- extract_metrics(results_sm3)
+metrics_result_sm3
+
+results_sm2a <- get_all_models('sm2a', train, test)
+metrics_result_sm2a <- extract_metrics(results_sm2a)
+metrics_result_sm2a
+
+results_sm2b <- get_all_models('sm2b', train, test)
+metrics_result_sm2b <- extract_metrics(results_sm2b)
+metrics_result_sm2b
+
+results_sm2c <- get_all_models('sm2c', train, test)
+metrics_result_sm2c <- extract_metrics(results_sm2c)
+metrics_result_sm2c
 # Pour sm6 par exemple
 per_class_acc_sm6 <- extract_per_class_accuracy(results_sm6, "sm6")
 print(per_class_acc_sm6)

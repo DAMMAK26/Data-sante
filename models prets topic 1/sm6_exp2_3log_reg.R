@@ -433,6 +433,33 @@ extract_preds <- function(result) {
   return(metrics_only)
 }
 
+extract_per_class_accuracy <- function(result, target_col) 
+  
+  
+  
+results_sm2c <- get_all_models('sm2c', train, test)
+metrics_result_sm2c <- extract_metrics(results_sm2c)
+metrics_result_sm2c
+
+per_class_acc_sm2c <- extract_per_class_accuracy(results_sm2b, "sm2c")
+print(per_class_acc_sm2c)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 results_sm6 <- get_all_models('sm6', train, test)
 metrics_result_sm6 <- extract_metrics(results_sm6)
 metrics_result_sm6
@@ -466,50 +493,6 @@ metrics_result_sm2c <- extract_metrics(results_sm2c)
 metrics_result_sm2c
 
 
-extract_per_class_accuracy <- function(result, target_col) {
-  per_class_acc_list <- list()
-  
-  for (model_name in names(result)) {
-    preds <- result[[model_name]]$predictions
-    
-    # Harmoniser les levels
-    truth_vec <- factor(test[[target_col]])
-    pred_vec <- factor(preds, levels = levels(truth_vec))
-    
-    df <- tibble(
-      truth = truth_vec,
-      prediction = pred_vec
-    )
-    
-    # Initialiser toutes les classes (même si certaines n'existent pas dans test)
-    all_classes <- levels(truth_vec)
-    
-    # Calcul du per-class accuracy
-    per_class_acc <- df %>%
-      group_by(truth) %>%
-      summarise(
-        correct = sum(truth == prediction, na.rm = TRUE),
-        total = n(),
-        accuracy = ifelse(total > 0, correct / total, NA_real_),
-        .groups = 'drop'
-      ) %>%
-      # Compléter les classes manquantes (si une classe est absente dans le test)
-      complete(truth = all_classes, fill = list(correct = 0, total = 0, accuracy = NA_real_)) %>%
-      # Remplacer NA par "None" ou ce que tu veux
-      mutate(accuracy = ifelse(is.na(accuracy), "None", as.character(round(accuracy, 3))))
-    
-    per_class_acc_list[[model_name]] <- per_class_acc
-  }
-  
-  return(per_class_acc_list)
-}
-
-metrics_result_sm6
-metrics_result_sm1
-metrics_result_sm3
-metrics_result_sm2a
-metrics_result_sm2b
-metrics_result_sm2c
 
 
 # Pour sm6 par exemple
