@@ -735,7 +735,7 @@ observeEvent(input$maj_reponses, {
     }
     
     cat("\n💬 État général de bien-être mental (sm1) : ")
-    if (prediction_sm1 == 1) {
+    if (prediction_sm1 == 2) {
       cat("Malheureux(se)\n")
     }  else {
       cat("Heureux(se)\n")
